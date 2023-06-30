@@ -1,0 +1,381 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "Editor.exe"
+		},
+		{
+			"path" : "Editor.pdb"
+		}
+	],
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"_add_executable",
+			"add_executable",
+			"target_link_libraries",
+			"target_include_directories",
+			"target_compile_features"
+		],
+		"files" : 
+		[
+			"D:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 70,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 591,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 73,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 74,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 71,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 72,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 77,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-fopenmp=libomp"
+				},
+				{
+					"fragment" : "-std=gnu++20"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 3,
+					"define" : "SPDLOG_COMPILED_LIB"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 5,
+					"path" : "E:/Graphics/Toy/SoftRenderer/Editor/src"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/include"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/stb"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/Walnut/src"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/Renderer/src"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/tinyobjloader"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/backends"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "C:/Program Files (x86)/spdlog/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "C:/Program Files (x86)/glm/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "D:/vcpkg/installed/x64-windows/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "F:/VulkanSDK/Include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					7
+				],
+				"standard" : "20"
+			},
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"defines" : 
+			[
+				{
+					"backtrace" : 3,
+					"define" : "SPDLOG_COMPILED_LIB"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 5,
+					"path" : "E:/Graphics/Toy/SoftRenderer/Editor/src"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/include"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/stb"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/Walnut/src"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/Renderer/src"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/tinyobjloader"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/backends"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "C:/Program Files (x86)/spdlog/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "C:/Program Files (x86)/glm/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "D:/vcpkg/installed/x64-windows/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "F:/VulkanSDK/Include"
+				}
+			],
+			"language" : "RC",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "imgui::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "Renderer::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "glfw::@0aa6f7fc354a61a17aaf"
+		}
+	],
+	"id" : "Editor::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-Xlinker /subsystem:console",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "Walnut.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "imgui.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "3rdparty\\glfw\\src\\glfw3.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "Renderer.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "Walnut.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "Renderer.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "imgui.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "F:\\VulkanSDK\\Lib\\vulkan-1.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "3rdparty\\glfw\\src\\glfw3.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-fopenmp=libomp",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "\"C:\\Program Files (x86)\\spdlog\\lib\\spdlog.lib\"",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "D:\\vcpkg\\installed\\x64-windows\\lib\\assimp-vc142-mt.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "D:\\vcpkg\\installed\\x64-windows\\lib\\pugixml.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "D:\\vcpkg\\installed\\x64-windows\\lib\\embree3.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "D:\\vcpkg\\installed\\x64-windows\\lib\\tbb12.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "D:\\vcpkg\\installed\\x64-windows\\lib\\tbbmalloc_proxy.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "D:\\vcpkg\\installed\\x64-windows\\lib\\tbbmalloc.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "Editor",
+	"nameOnDisk" : "Editor.exe",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Editor/src/Editor.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 1,
+			"path" : "Editor/resources/editor.rc",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

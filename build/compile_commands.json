@@ -1,0 +1,212 @@
+[
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\Camera\\Camera.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\Camera\\Camera.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/Camera/Camera.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\FileDialogs.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\FileDialogs.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/FileDialogs.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\Geometry\\Mesh.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\Geometry\\Mesh.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/Geometry/Mesh.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\Rasterization\\Rasterizer.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\Rasterization\\Rasterizer.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/Rasterization/Rasterizer.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\RayTracing\\RTCTracer.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\RayTracing\\RTCTracer.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/RayTracing/RTCTracer.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\RayTracing\\RayTracer.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\RayTracing\\RayTracer.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/RayTracing/RayTracer.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\Renderer.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\Renderer.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/Renderer.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/glm/include\" -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem D:/vcpkg/installed/x64-windows/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -std=gnu++20 -o CMakeFiles\\Walnut.dir\\Walnut\\src\\Walnut\\Application.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Walnut\\src\\Walnut\\Application.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Walnut/src/Walnut/Application.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/glm/include\" -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem D:/vcpkg/installed/x64-windows/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -std=gnu++20 -o CMakeFiles\\Walnut.dir\\Walnut\\src\\Walnut\\ImGui\\ImGuiBuild.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Walnut\\src\\Walnut\\ImGui\\ImGuiBuild.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Walnut/src/Walnut/ImGui/ImGuiBuild.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/glm/include\" -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem D:/vcpkg/installed/x64-windows/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -std=gnu++20 -o CMakeFiles\\Walnut.dir\\Walnut\\src\\Walnut\\Image.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Walnut\\src\\Walnut\\Image.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Walnut/src/Walnut/Image.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/glm/include\" -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem D:/vcpkg/installed/x64-windows/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -std=gnu++20 -o CMakeFiles\\Walnut.dir\\Walnut\\src\\Walnut\\Input\\Input.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Walnut\\src\\Walnut\\Input\\Input.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Walnut/src/Walnut/Input/Input.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/glm/include\" -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem D:/vcpkg/installed/x64-windows/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -std=gnu++20 -o CMakeFiles\\Walnut.dir\\Walnut\\src\\Walnut\\Random.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Walnut\\src\\Walnut\\Random.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Walnut/src/Walnut/Random.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I../3rdparty/imgui -I../3rdparty/imgui/backends -I../3rdparty/glfw/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -o CMakeFiles\\imgui.dir\\3rdparty\\imgui\\imgui.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\imgui\\imgui.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/imgui.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I../3rdparty/imgui -I../3rdparty/imgui/backends -I../3rdparty/glfw/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -o CMakeFiles\\imgui.dir\\3rdparty\\imgui\\imgui_demo.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\imgui\\imgui_demo.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/imgui_demo.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I../3rdparty/imgui -I../3rdparty/imgui/backends -I../3rdparty/glfw/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -o CMakeFiles\\imgui.dir\\3rdparty\\imgui\\imgui_draw.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\imgui\\imgui_draw.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/imgui_draw.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I../3rdparty/imgui -I../3rdparty/imgui/backends -I../3rdparty/glfw/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -o CMakeFiles\\imgui.dir\\3rdparty\\imgui\\imgui_tables.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\imgui\\imgui_tables.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/imgui_tables.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I../3rdparty/imgui -I../3rdparty/imgui/backends -I../3rdparty/glfw/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -o CMakeFiles\\imgui.dir\\3rdparty\\imgui\\imgui_widgets.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\imgui\\imgui_widgets.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/imgui_widgets.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I../3rdparty/imgui -I../3rdparty/imgui/backends -I../3rdparty/glfw/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -o CMakeFiles\\imgui.dir\\3rdparty\\imgui\\backends\\imgui_impl_glfw.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\imgui\\backends\\imgui_impl_glfw.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/backends/imgui_impl_glfw.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I../3rdparty/imgui -I../3rdparty/imgui/backends -I../3rdparty/glfw/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -o CMakeFiles\\imgui.dir\\3rdparty\\imgui\\backends\\imgui_impl_opengl3.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\imgui\\backends\\imgui_impl_opengl3.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/backends/imgui_impl_opengl3.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Editor/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Walnut/src -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Editor.dir\\Editor\\src\\Editor.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Editor\\src\\Editor.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Editor/src/Editor.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "\"C:\\Program Files\\CMake\\bin\\cmake.exe\" -E cmake_llvm_rc E:\\Graphics\\Toy\\SoftRenderer\\Editor\\resources\\editor.rc CMakeFiles\\Editor.dir\\Editor\\resources\\editor.rc.res.pp C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DSPDLOG_COMPILED_LIB -DRC_INVOKED -I E:/Graphics/Toy/SoftRenderer/Editor/src -I E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/include -I E:/Graphics/Toy/SoftRenderer/3rdparty/stb -I E:/Graphics/Toy/SoftRenderer/Walnut/src -I E:/Graphics/Toy/SoftRenderer/Renderer/src -I E:/Graphics/Toy/SoftRenderer/3rdparty/tinyobjloader -I E:/Graphics/Toy/SoftRenderer/3rdparty/imgui -I E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/backends -I \"C:/Program Files (x86)/spdlog/include\" -I \"C:/Program Files (x86)/glm/include\" -I D:/vcpkg/installed/x64-windows/include -I F:/VulkanSDK/Include -x c -E -- E:\\Graphics\\Toy\\SoftRenderer\\Editor\\resources\\editor.rc ++ C:\\PROGRA~1\\LLVM\\bin\\llvm-rc.exe -DSPDLOG_COMPILED_LIB -I SOURCE_DIR -I E:/Graphics/Toy/SoftRenderer/Editor/src -I E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/include -I E:/Graphics/Toy/SoftRenderer/3rdparty/stb -I E:/Graphics/Toy/SoftRenderer/Walnut/src -I E:/Graphics/Toy/SoftRenderer/Renderer/src -I E:/Graphics/Toy/SoftRenderer/3rdparty/tinyobjloader -I E:/Graphics/Toy/SoftRenderer/3rdparty/imgui -I E:/Graphics/Toy/SoftRenderer/3rdparty/imgui/backends -I \"C:/Program Files (x86)/spdlog/include\" -I \"C:/Program Files (x86)/glm/include\" -I D:/vcpkg/installed/x64-windows/include -I F:/VulkanSDK/Include /fo CMakeFiles\\Editor.dir\\Editor\\resources\\editor.rc.res CMakeFiles\\Editor.dir\\Editor\\resources\\editor.rc.res.pp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Editor/resources/editor.rc"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\context.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\context.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/context.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\init.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\init.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/init.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\input.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\input.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/input.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\monitor.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\monitor.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/monitor.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\platform.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\platform.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/platform.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\vulkan.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\vulkan.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/vulkan.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\window.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\window.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/window.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\egl_context.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\egl_context.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/egl_context.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\osmesa_context.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\osmesa_context.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/osmesa_context.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\null_init.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\null_init.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/null_init.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\null_monitor.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\null_monitor.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/null_monitor.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\null_window.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\null_window.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/null_window.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\null_joystick.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\null_joystick.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/null_joystick.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\win32_module.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\win32_module.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/win32_module.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\win32_time.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\win32_time.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/win32_time.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\win32_thread.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\win32_thread.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/win32_thread.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\win32_init.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\win32_init.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/win32_init.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\win32_joystick.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\win32_joystick.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/win32_joystick.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\win32_monitor.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\win32_monitor.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/win32_monitor.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\win32_window.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\win32_window.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/win32_window.c"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DUNICODE -D_CRT_SECURE_NO_WARNINGS -D_GLFW_WIN32 -D_UNICODE -I../3rdparty/glfw/include -I../3rdparty/glfw/src -I3rdparty/glfw/src -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -Wall -o 3rdparty\\glfw\\src\\CMakeFiles\\glfw.dir\\wgl_context.c.obj -c E:\\Graphics\\Toy\\SoftRenderer\\3rdparty\\glfw\\src\\wgl_context.c",
+  "file": "E:/Graphics/Toy/SoftRenderer/3rdparty/glfw/src/wgl_context.c"
+}
+]
