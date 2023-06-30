@@ -34,9 +34,8 @@ namespace utils {
 
     static soft::color GammaCorrection(const glm::vec3& color)
     {
-        // return glm::sqrt(color);
-        return glm::pow(color, glm::vec3(1.0f / 2.2f));
-        // return glm::sqrt(color);
+        return glm::sqrt(color);
+        // return glm::pow(color, glm::vec3(1.0f / 2.2f));
     }
 
     static vec3 ConvertToColor(const uint32_t* imageData, uint32_t x, uint32_t y, uint32_t width)

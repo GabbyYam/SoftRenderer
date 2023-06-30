@@ -59,7 +59,8 @@ namespace soft {
 
         Material mat0        = {{1.0, 1.0, 1.0}, 1.0f};
         Material mat1        = {{1, .3, .4}, 0.9f};
-        Material mat2        = {{0.9, 0.9, 0.9}, 0.0f};
+        Material mat2        = {{0.9, 0.9, 0.9}, 1.0f};
+        Material mat3        = {{0.8, .1, .4}, .9};
         Material lamp        = {{.9, .9, 0.9}, 0.3f};
         lamp.m_Emission      = lamp.m_Albedo;
         lamp.m_EmissionPower = 16;
@@ -70,10 +71,11 @@ namespace soft {
         m_ActiveScene->materials.push_back(std::make_shared<Material>(mat0));
         m_ActiveScene->materials.push_back(std::make_shared<Material>(mat1));
         m_ActiveScene->materials.push_back(std::make_shared<Material>(mat2));
+        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat3));
         m_ActiveScene->materials.push_back(std::make_shared<Material>(lamp));
 
         SetupScene();
-        AddSphere(vec3{0.0, 1.0f, -1.5f}, 1.0f, 2);
+        AddSphere(vec3{0.0, 1.0f, -1.5f}, 1.0f, 1);
         // AddSphere(vec3{0.0, 2.0f, 4.0f}, 1.0f, 3);
         // AddSphere(vec3{-1.5, 1.0f, 0.0f}, 1.0f, 2);
         // AddSphere(vec3{1.5, 1.0f, 0.0f}, 1.0f, 2);
@@ -113,7 +115,7 @@ namespace soft {
 
 #define STL_PAR 1
 
-#if STL_PAR
+        // #if STL_PAR
         std::for_each(std::execution::par, begin(m_VerticalIter), end(m_VerticalIter), [this](uint32_t j) {
             std::for_each(std::execution::par, begin(m_HorizontalIter), end(m_HorizontalIter), [this, j](uint32_t i) {
                 vec3 color = PerPixel(i, j);
@@ -125,36 +127,36 @@ namespace soft {
                 SetPixelColor(i, j, accumulateColor);
             });
         });
-#elif OMP_PAR
 
-#    pragma omp parallel for
-        for (int j = 0; j < m_Height; ++j) {
-#    pragma omp parallel for
-            for (int i = 0; i < m_Width; ++i) {
-                vec3 color = PerPixel(i, j);
-                int  index = i + j * m_FramebufferImage->GetWidth();
-                m_AccumulatedData[index] += color;
+        // #elif OMP_PAR
+        // #    pragma omp parallel for
+        //         for (int j = 0; j < m_Height; ++j) {
+        // #    pragma omp parallel for
+        //             for (int i = 0; i < m_Width; ++i) {
+        //                 vec3 color = PerPixel(i, j);
+        //                 int  index = i + j * m_FramebufferImage->GetWidth();
+        //                 m_AccumulatedData[index] += color;
 
-                vec3 accumulateColor = m_AccumulatedData[index];
-                accumulateColor /= (float)m_FrameIndex;
-                SetPixelColor(i, j, accumulateColor);
-            }
-        }
-#else
-        tbb::parallel_for(tbb::blocked_range2d<size_t>(0, m_Height, 0, m_Width), [&](tbb::blocked_range2d<size_t> r) {
-            for (size_t j = r.rows().begin(); j < r.rows().end(); ++j) {
-                for (size_t i = r.cols().begin(); i < r.cols().end(); ++i) {
-                    vec3 color = PerPixel(i, j);
-                    int  index = i + j * m_FramebufferImage->GetWidth();
-                    m_AccumulatedData[index] += color;
+        //                 vec3 accumulateColor = m_AccumulatedData[index];
+        //                 accumulateColor /= (float)m_FrameIndex;
+        //                 SetPixelColor(i, j, accumulateColor);
+        //             }
+        //         }
+        // #else
+        //         tbb::parallel_for(tbb::blocked_range2d<size_t>(0, m_Height, 0, m_Width), [&](tbb::blocked_range2d<size_t> r) {
+        //             for (size_t j = r.rows().begin(); j < r.rows().end(); ++j) {
+        //                 for (size_t i = r.cols().begin(); i < r.cols().end(); ++i) {
+        //                     vec3 color = PerPixel(i, j);
+        //                     int  index = i + j * m_FramebufferImage->GetWidth();
+        //                     m_AccumulatedData[index] += color;
 
-                    vec3 accumulateColor = m_AccumulatedData[index];
-                    accumulateColor /= (float)m_FrameIndex;
-                    SetPixelColor(i, j, accumulateColor);
-                }
-            }
-        });
-#endif
+        //                     vec3 accumulateColor = m_AccumulatedData[index];
+        //                     accumulateColor /= (float)m_FrameIndex;
+        //                     SetPixelColor(i, j, accumulateColor);
+        //                 }
+        //             }
+        //         });
+        // #endif
 
         ++m_FrameIndex;
         m_FramebufferImage->SetData(m_ImageData);
@@ -175,11 +177,12 @@ namespace soft {
             auto payload = TraceRay(ray);
             if (payload.hit.geomID == RTC_INVALID_GEOMETRY_ID)
                 break;
+
             // Default value
             normal = {payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z};
 
-            auto geometry = m_ActiveScene->geometries[payload.hit.geomID];
             // Interpolate primitive
+            auto geometry = m_ActiveScene->geometries[payload.hit.geomID];
             if (!geometry->primitives.empty()) {
                 // Barycentric Coordinate
                 auto primitive = *geometry->primitives[payload.hit.primID];
@@ -197,29 +200,31 @@ namespace soft {
                     contribution *= diffuseMap->Sample2D(uv);
                 }
             }
+
             // Scatter ray & Calculate material and
             auto material = m_ActiveScene->materials[m_ActiveScene->materialIndex[payload.hit.geomID]];
 
             contribution *= material->m_Albedo;
 
-            NoL = 0.8 + clamp(glm::dot(lightSetting.directionalLight, normal), 0.0f, 1.0f);
-            // NoL = max(0.15f, (1.5f - glm::step(NoL, .3f)));
+            // NoL = glm::dot(normalize(lightSetting.directionalLight), normalize(normal));
+            // NoL = max(0.0f, NoL);
 
-            light += material->Emission() * contribution;
+            light += material->Emission() * contribution * NoL;
             ray = material->Scatter(ray, payload);
         }
 
         vec3 skybox{0.6f, .7f, .9f};
-        if (lightSetting.useEnvironmentMap)
-            skybox = m_EnvironmentMap->SampleCube(ray.d) * 100.0f;
 
-        return (light + skybox * contribution) * NoL * lightSetting.lightIntensity * lightSetting.lightColor;
+        // if (lightSetting.useEnvironmentMap)
+        //     skybox = m_EnvironmentMap->SampleCube(ray.d) * 100.0f;
+
+        return (light + skybox * contribution * NoL) * lightSetting.lightIntensity * lightSetting.lightColor;
     }
 
     void RTCTracer::SetupScene()
     {
         for (auto& model : m_ActiveScene->models) {
-            int randomIndex = Walnut::Random::UInt() % m_ActiveScene->materials.size();
+            // int randomIndex = Walnut::Random::UInt() % m_ActiveScene->materials.size();
             AddModel(model, 0);
         }
     }
