@@ -7,7 +7,6 @@
 - Vertex Assembly
 - Fragment Shading
 - Z-Test
-- 
 
 ### Raytracing
 
