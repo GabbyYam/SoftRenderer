@@ -60,7 +60,7 @@ namespace soft {
             lightSetting          = lightConfig;
             rayTraceSetting       = rtConfig;
             postProcessingSetting = postprocessConfig;
-            debug("base class");
+            // debug("base class");
         }
 
         const std::shared_ptr<Walnut::Image> GetImage() const
@@ -84,7 +84,6 @@ namespace soft {
             float d = 0.59;
             float e = 0.14;
 
-            // return glm::clamp(((x * (a * x + b)) / (x * (c * x + d) + e)), 0.0f, 1.0f);
             return ((x * (a * x + b)) / (x * (c * x + d) + e));
         }
 
@@ -93,7 +92,7 @@ namespace soft {
             m_FrameIndex = 1;
         }
 
-        uint32_t* GetImageData()
+        auto GetImageData()
         {
             return m_ImageData;
         }
@@ -115,8 +114,8 @@ namespace soft {
     protected:
         uint32_t                       m_Width = 0, m_Height = 0;
         std::shared_ptr<Walnut::Image> m_FramebufferImage = nullptr;
-        uint32_t*                      m_ImageData        = nullptr;
-        glm::vec3*                     m_AccumulatedData  = nullptr;
+        vec4*                          m_ImageData        = nullptr;
+        vec3*                          m_AccumulatedData  = nullptr;
 
         std::vector<uint32_t> m_VerticalIter, m_HorizontalIter;
 

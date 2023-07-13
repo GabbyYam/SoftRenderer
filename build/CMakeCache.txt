@@ -325,6 +325,9 @@ GLFW_SOURCE_DIR:STATIC=E:/Graphics/Toy/SoftRenderer/3rdparty/glfw
 //Force use of high-performance GPU on hybrid systems
 GLFW_USE_HYBRID_HPG:BOOL=OFF
 
+//The directory containing a CMake configuration file for OpenImageDenoise.
+OpenImageDenoise_DIR:PATH=C:/Program Files (x86)/OpenImageDenoise/lib/cmake/OpenImageDenoise-2.0.1
+
 //CXX compiler flags for OpenMP parallelization
 OpenMP_CXX_FLAGS:STRING=-fopenmp=libomp
 
@@ -412,6 +415,9 @@ glm_DIR:PATH=C:/Program Files (x86)/glm/lib/cmake/glm
 
 //The directory containing a CMake configuration file for imguizmo.
 imguizmo_DIR:PATH=D:/vcpkg/installed/x64-windows/share/imguizmo
+
+//The directory containing a CMake configuration file for oidn.
+oidn_DIR:PATH=oidn_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for pugixml.
 pugixml_DIR:PATH=D:/vcpkg/installed/x64-windows/share/pugixml

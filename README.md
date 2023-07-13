@@ -27,9 +27,13 @@
 - TBB parallel for
 - embree3 for BVH ray intersection
 
+## Denoise
+
+- Temporal Filter
+- OIDN
+
 ## TODO
 
-- oidn for noise reduce
 - BDPT
 - Disney BSDF
 - Cook-Torrance BRDF
@@ -43,6 +47,6 @@
 
 ![2023-06-10 23'33'16](Assets/example_02.png)
 
-![2023-06-10 23'33'16](Assets/cornellbox.png)
+![2023-06-10 23'33'16](Assets/CornelBox_Sphere_16_Bounce_denoised.png)
 
-![2023-06-10 23'33'16](Assets/cornellbox_16bounce.png)
+![2023-06-10 23'33'16](Assets/CornelBox_16_Bounce_denoised.png)

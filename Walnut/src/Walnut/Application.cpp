@@ -778,9 +778,11 @@ namespace Walnut {
         check_vk_result(err);
 
         // Create fence to ensure that the command buffer has finished executing
-        VkFenceCreateInfo fenceCreateInfo = {};
-        fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-        fenceCreateInfo.flags             = 0;
+        VkFenceCreateInfo fenceCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+            .flags = 0,
+        };
+
         VkFence fence;
         err = vkCreateFence(g_Device, &fenceCreateInfo, nullptr, &fence);
         check_vk_result(err);

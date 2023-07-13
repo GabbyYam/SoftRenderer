@@ -13,6 +13,7 @@
 #include <spdlog/spdlog.h>
 #include <stdint.h>
 #include <type_traits>
+#include <vcruntime_string.h>
 
 #include "Rasterization/Rasterizer.h"
 #include "Renderer.h"
@@ -22,6 +23,7 @@
 
 #include <stb_image.h>
 #include <stb_image_write.h>
+#include <OpenImageDenoise/oidn.hpp>
 
 static const std::string s_MeshFilename    = "H:/GameDev Asset/Models/Vroid_JK_Fix.fbx";
 static const std::string s_ObjMeshFilename = "E:/Data/room/face.obj";
@@ -189,17 +191,124 @@ public:
         m_LastTime = timer.ElapsedMillis();
     }
 
+    void WriteFloatImage(const char* filename, const vec3* data, int width, int height)
+    {
+        // 创建一个足够容纳图片数据的缓冲区
+        unsigned char* imageBuffer = new unsigned char[width * height * 3];
+
+        // 将vec4数据转换为8位整数数据
+        const vec3*    pixelData = data;
+        unsigned char* imagePtr  = imageBuffer;
+        for (int i = 0; i < width * height; ++i) {
+            // 提取vec4中的RGB分量，并将其映射到[0, 255]范围
+            unsigned char r = static_cast<unsigned char>(pixelData->r * 255.0f);
+            unsigned char g = static_cast<unsigned char>(pixelData->g * 255.0f);
+            unsigned char b = static_cast<unsigned char>(pixelData->b * 255.0f);
+
+            // 将像素数据写入缓冲区
+            *imagePtr++ = r;
+            *imagePtr++ = g;
+            *imagePtr++ = b;
+
+            // 移动到下一个像素
+            ++pixelData;
+        }
+
+        // 写入PNG图像文件
+        stbi_write_png(filename, width, height, 3, imageBuffer, 0);
+
+        // 释放缓冲区内存
+        delete[] imageBuffer;
+    }
+
+    void WriteFloatImage(const char* filename, const vec4* data, int width, int height)
+    {
+        // 创建一个足够容纳图片数据的缓冲区
+        unsigned char* imageBuffer = new unsigned char[width * height * 4];
+
+        // 将vec4数据转换为8位整数数据
+        const vec4*    pixelData = data;
+        unsigned char* imagePtr  = imageBuffer;
+        for (int i = 0; i < width * height; ++i) {
+            // 提取vec4中的RGB分量，并将其映射到[0, 255]范围
+            unsigned char r = static_cast<unsigned char>(pixelData->r * 255.0f);
+            unsigned char g = static_cast<unsigned char>(pixelData->g * 255.0f);
+            unsigned char b = static_cast<unsigned char>(pixelData->b * 255.0f);
+            unsigned char a = static_cast<unsigned char>(pixelData->a * 255.0f);
+
+            // 将像素数据写入缓冲区
+            *imagePtr++ = r;
+            *imagePtr++ = g;
+            *imagePtr++ = b;
+            *imagePtr++ = a;
+            // 移动到下一个像素
+            ++pixelData;
+        }
+
+        // 写入PNG图像文件
+        stbi_write_png(filename, width, height, 4, imageBuffer, 0);
+
+        // 释放缓冲区内存
+        delete[] imageBuffer;
+    }
+
+    void convertFloat4ToFloat3(const float* inputFloat4, float* outputFloat3, int width, int height)
+    {
+        for (int i = 0; i < width * height; ++i) {
+            outputFloat3[i * 3 + 0] = inputFloat4[i * 4 + 0];  // Red
+            outputFloat3[i * 3 + 1] = inputFloat4[i * 4 + 1];  // Green
+            outputFloat3[i * 3 + 2] = inputFloat4[i * 4 + 2];  // Blue
+        }
+    }
+
     void SaveImage()
     {
         // Rotate Image
-        auto imageData = m_ActiveRenderer->GetImageData();
+        float* imageData = (float*)m_ActiveRenderer->GetImageData();
 
         auto              now   = std::chrono::system_clock::now();
         std::time_t       now_c = std::chrono::system_clock::to_time_t(now);
         std::stringstream ss;
         ss << std::put_time(std::localtime(&now_c), "%Y-%m-%d %H'%M'%S");
         std::string filename = soft::FileDialogs::SaveFile("(Image File) *.png\0");
-        stbi_write_png(filename.data(), m_ViewportWidth, m_ViewportHeight, 4, imageData, m_ViewportWidth * 4);
+        if (auto it = filename.find(".png"))
+            filename = filename.substr(0, it);
+
+        WriteFloatImage((filename + ".png").data(), reinterpret_cast<vec4*>(imageData), m_ViewportWidth, m_ViewportHeight);
+
+        {
+            // Create an Open Image Denoise device
+            oidn::DeviceRef device = oidn::newDevice();  // CPU or GPU if available
+            device.commit();
+
+            // Create buffers for input/output images accessible by both host (CPU) and device (CPU/GPU)
+            // oidn::BufferRef colorBuf = device.newBuffer(m_ViewportWidth * m_ViewportHeight * 4 * sizeof(float));
+
+            // 创建输出图像缓冲区
+            float* outputImage = new float[m_ViewportWidth * m_ViewportHeight * 3];
+            convertFloat4ToFloat3(imageData, outputImage, m_ViewportWidth, m_ViewportHeight);
+
+            oidn::FilterRef filter = device.newFilter("RT");
+            filter.setImage("color", outputImage, oidn::Format::Float3, m_ViewportWidth, m_ViewportHeight);
+            filter.setImage("output", outputImage, oidn::Format::Float3, m_ViewportWidth, m_ViewportHeight);
+            filter.set("hdr", true);  // 设置为true表示输入图像为HDR格式
+            filter.commit();
+
+            filter.execute();
+
+            // // Check for errors
+            const char* errorMessage;
+            if (device.getError(errorMessage) != oidn::Error::None) {
+                std::cout << "Error: " << errorMessage << std::endl;
+            }
+            else {
+                WriteFloatImage((filename + "_denoised.png").data(), reinterpret_cast<vec3*>(outputImage), m_ViewportWidth,
+                                m_ViewportHeight);
+            }
+            // 释放内存
+            if (outputImage)
+                delete[] outputImage;
+        }
     }
 
 private:

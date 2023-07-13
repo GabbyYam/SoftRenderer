@@ -259,31 +259,29 @@ namespace soft {
         AddQuad(cube[3], 0);
         AddQuad(cube[4], 0);
         // AddQuad({{-1, -1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, 1}}, 0);
-        // AddSphere(vec3{0.0, 0.0f, 0.0f}, 0.4f, 5);
-        // AddSphere(vec3{0.0, -100.0f, 0.0f}, 100.f, 5);
+        AddSphere(vec3{0.0, 0.0f, 0.0f}, 0.4f, 5);
 
         // Lamp
-        // AddQuad(cube[3], 4);
         AddQuad({{0.25, 0.99, -0.25}, {0.25, 0.99, 0.25}, {-0.25, 0.99, -0.25}, {-0.25, 0.99, 0.25}}, 4);
 
-        // Object
-        auto translate = glm::translate(mat4(1.0), vec3(-0.35, -0.4, -0.3));
-        auto rotate    = glm::rotate(mat4(1.0), glm::radians(15.0f), vec3(0, 1, 0));
-        auto scale     = glm::scale(mat4(1.0), vec3(0.3, 0.6, 0.3));
-        for (auto quad : cube) {
-            quad.Reverse();
-            quad.SetTransform(translate * rotate * scale);
-            AddQuad(quad, 0);
-        }
+        // // Object
+        // auto translate = glm::translate(mat4(1.0), vec3(-0.35, -0.4, -0.3));
+        // auto rotate    = glm::rotate(mat4(1.0), glm::radians(15.0f), vec3(0, 1, 0));
+        // auto scale     = glm::scale(mat4(1.0), vec3(0.3, 0.6, 0.3));
+        // for (auto quad : cube) {
+        //     quad.Reverse();
+        //     quad.SetTransform(translate * rotate * scale);
+        //     AddQuad(quad, 0);
+        // }
 
-        translate = glm::translate(mat4(1.0), vec3(0.35, -0.7, 0.3));
-        rotate    = glm::rotate(mat4(1.0), glm::radians(-15.0f), vec3(0, 1, 0));
-        scale     = glm::scale(mat4(1.0), vec3(0.3, 0.3, 0.3));
-        for (auto quad : cube) {
-            quad.Reverse();
-            quad.SetTransform(translate * rotate * scale);
-            AddQuad(quad, 0);
-        }
+        // translate = glm::translate(mat4(1.0), vec3(0.35, -0.7, 0.3));
+        // rotate    = glm::rotate(mat4(1.0), glm::radians(-15.0f), vec3(0, 1, 0));
+        // scale     = glm::scale(mat4(1.0), vec3(0.3, 0.3, 0.3));
+        // for (auto quad : cube) {
+        //     quad.Reverse();
+        //     quad.SetTransform(translate * rotate * scale);
+        //     AddQuad(quad, 0);
+        // }
 
 #endif
     }

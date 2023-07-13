@@ -24,6 +24,8 @@ find_package(embree 3 CONFIG REQUIRED)
 
 find_package(TBB CONFIG REQUIRED)
 
+find_package(OpenImageDenoise REQUIRED)
+
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -57,11 +59,12 @@ target_link_libraries(Walnut PUBLIC Renderer Vulkan::Vulkan imgui glfw glm::glm)
 target_include_directories(Walnut PRIVATE ${THIRD_PARTY_DIR}/glfw/include ${THIRD_PARTY_DIR}/stb)
 target_compile_features(Walnut PRIVATE cxx_std_20)
 
+
 # Renderer Runtime for Editor
 add_library(Renderer ${renderer_src})
 target_include_directories(Renderer PUBLIC ${RENDERER_SOURCE_DIR} ${THIRD_PARTY_DIR}/tinyobjloader ${THIRD_PARTY_DIR}/stb)
 target_link_libraries(Renderer PUBLIC Walnut spdlog::spdlog glm::glm assimp::assimp glfw)
-target_link_libraries(Renderer PRIVATE embree)
+target_link_libraries(Renderer PRIVATE embree OpenImageDenoise)
 target_link_libraries(Renderer PRIVATE OpenMP::OpenMP_CXX)
 target_link_libraries(Renderer PRIVATE TBB::tbb TBB::tbbmalloc TBB::tbbmalloc_proxy)
 target_compile_features(Renderer PRIVATE cxx_std_20)
@@ -71,6 +74,7 @@ add_executable(Editor ${editor_src} ${resources})
 target_include_directories(Editor PRIVATE ${EDITOR_SOURCE_DIR})
 target_include_directories(Editor PRIVATE ${THIRD_PARTY_DIR}/glfw/include ${THIRD_PARTY_DIR}/stb)
 target_link_libraries(Editor PRIVATE Walnut imgui glm::glm glfw)
+target_link_libraries(Editor PRIVATE OpenImageDenoise)
 target_link_libraries(Editor PRIVATE OpenMP::OpenMP_CXX)
 
 
