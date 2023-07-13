@@ -48,6 +48,6 @@
 
 ![2023-06-10 23'33'16](Assets/example_02.png)
 
-![2023-06-10 23'33'16](Assets/CornelBox_Sphere_16_Bounce_denoised.png)
+![2023-06-10 23'33'16](Assets/CornellBox_Sphere_16_Bounce_NdotL_denoised.png)
 
-![2023-06-10 23'33'16](Assets/CornelBox_16_Bounce_denoised.png)
+![2023-06-10 23'33'16](Assets/CornellBox_16_Bounce_NdotL_denoised.png)

@@ -65,6 +65,7 @@ public:
 
     virtual void OnUIRender() override
     {
+        m_ConfigChange = false;
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0.0f, 0.0f});
             ImGui::Begin("Viewport");
@@ -134,13 +135,13 @@ public:
         }
 
         {
-            m_ConfigChange = false;
             ImGui::Begin("RT Setting");
             m_ConfigChange |= ImGui::Checkbox("Apply Ray Tracing", &m_ApplyRayTracing);
 
             auto& maxBounce = m_ActiveRenderer->rayTraceSetting.bounce;
             m_ConfigChange |= ImGui::InputInt("Ray Bounce", &maxBounce);
             maxBounce = std::clamp(maxBounce, 0, 32);
+            m_ConfigChange |= ImGui::SliderFloat("End Prob", &m_ActiveRenderer->rayTraceSetting.prob, 0.0, 1.0);
 
             ImGui::End();
         }
@@ -164,8 +165,8 @@ public:
                 ImGui::Checkbox("FXAA", &m_ActiveRenderer->postProcessingSetting.FXAA);
 
                 ImGui::Text("Tone Mapping");
-                ImGui::Checkbox("ACES", &m_ActiveRenderer->postProcessingSetting.ToneMapping);
-                ImGui::Checkbox("Gamma", &m_ActiveRenderer->postProcessingSetting.Gamma);
+                m_ConfigChange |= ImGui::Checkbox("ACES", &m_ActiveRenderer->postProcessingSetting.ToneMapping);
+                m_ConfigChange |= ImGui::Checkbox("Gamma", &m_ActiveRenderer->postProcessingSetting.Gamma);
             }
             ImGui::End();
         }

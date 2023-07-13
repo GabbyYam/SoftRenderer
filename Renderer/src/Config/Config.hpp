@@ -15,7 +15,8 @@ namespace soft {
 
     struct RayTraceSetting
     {
-        int bounce = 5;
+        int   bounce = 5;
+        float prob   = 0.6;
     };
 
     struct PostProcessingSetting

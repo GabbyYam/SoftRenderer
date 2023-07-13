@@ -159,22 +159,19 @@ namespace soft {
 
     vec3 RTCTracer::PerPixel(uint32_t x, uint32_t y)
     {
-        vec3  light{0.0f};
-        vec3  contribution{1.0f};
-        vec3  attenuation{1.0f};
-        Ray   ray(m_ActiveCamera->GetPosition(), m_ActiveCamera->GetRayDirection(x, y));
-        float NoL = 1.0f;
-        vec3  normal;
+        vec3 Lo(0.0f);
+        vec3 contribution(1.0f);
+        Ray  ray(m_ActiveCamera->GetPosition(), m_ActiveCamera->GetRayDirection(x, y));
 
         // Simulate multi-bounce
-        for (int i = 0; i < rayTraceSetting.bounce; ++i) {
+        for (int i = 0; i < rayTraceSetting.bounce && Walnut::Random::Float() <= rayTraceSetting.prob; ++i) {
             // Intersect with scene
             auto payload = TraceRay(ray);
             if (payload.hit.geomID == RTC_INVALID_GEOMETRY_ID)
                 break;
 
             // Default value
-            normal = {payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z};
+            vec3 normal = {payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z};
 
             // Interpolate primitive
             auto geometry = m_ActiveScene->geometries[payload.hit.geomID];
@@ -201,20 +198,19 @@ namespace soft {
 
             contribution *= material->m_Albedo;
 
-            // NoL = glm::dot(normalize(lightSetting.directionalLight), normalize(normal));
-            // NoL = max(0.0f, NoL);
+            float NdotL = max(0.0f, dot(normalize(ray.d), normalize(-normal)));
 
-            light += material->Emission() * contribution;
+            Lo += material->Emission() * contribution * NdotL;
             ray = material->Scatter(ray, payload);
         }
 
-        vec3 skybox{0.6f, .7f, .9f};
+        // vec3 skybox{0.6f, .7f, .9f};
 
         // if (lightSetting.useEnvironmentMap)
         //     skybox = m_EnvironmentMap->SampleCube(ray.d) * 100.0f;
 
         // return (light + skybox * contribution * NoL) * lightSetting.lightIntensity * lightSetting.lightColor;
-        return light;
+        return Lo;
     }
 
     void RTCTracer::SetupScene()
@@ -259,29 +255,29 @@ namespace soft {
         AddQuad(cube[3], 0);
         AddQuad(cube[4], 0);
         // AddQuad({{-1, -1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, 1}}, 0);
-        AddSphere(vec3{0.0, 0.0f, 0.0f}, 0.4f, 5);
+        // AddSphere(vec3{0.0, 0.0f, 0.0f}, 0.4f, 5);
 
         // Lamp
         AddQuad({{0.25, 0.99, -0.25}, {0.25, 0.99, 0.25}, {-0.25, 0.99, -0.25}, {-0.25, 0.99, 0.25}}, 4);
 
         // // Object
-        // auto translate = glm::translate(mat4(1.0), vec3(-0.35, -0.4, -0.3));
-        // auto rotate    = glm::rotate(mat4(1.0), glm::radians(15.0f), vec3(0, 1, 0));
-        // auto scale     = glm::scale(mat4(1.0), vec3(0.3, 0.6, 0.3));
-        // for (auto quad : cube) {
-        //     quad.Reverse();
-        //     quad.SetTransform(translate * rotate * scale);
-        //     AddQuad(quad, 0);
-        // }
+        auto translate = glm::translate(mat4(1.0), vec3(-0.35, -0.4, -0.3));
+        auto rotate    = glm::rotate(mat4(1.0), glm::radians(15.0f), vec3(0, 1, 0));
+        auto scale     = glm::scale(mat4(1.0), vec3(0.3, 0.6, 0.3));
+        for (auto quad : cube) {
+            quad.Reverse();
+            quad.SetTransform(translate * rotate * scale);
+            AddQuad(quad, 0);
+        }
 
-        // translate = glm::translate(mat4(1.0), vec3(0.35, -0.7, 0.3));
-        // rotate    = glm::rotate(mat4(1.0), glm::radians(-15.0f), vec3(0, 1, 0));
-        // scale     = glm::scale(mat4(1.0), vec3(0.3, 0.3, 0.3));
-        // for (auto quad : cube) {
-        //     quad.Reverse();
-        //     quad.SetTransform(translate * rotate * scale);
-        //     AddQuad(quad, 0);
-        // }
+        translate = glm::translate(mat4(1.0), vec3(0.35, -0.7, 0.3));
+        rotate    = glm::rotate(mat4(1.0), glm::radians(-15.0f), vec3(0, 1, 0));
+        scale     = glm::scale(mat4(1.0), vec3(0.3, 0.3, 0.3));
+        for (auto quad : cube) {
+            quad.Reverse();
+            quad.SetTransform(translate * rotate * scale);
+            AddQuad(quad, 0);
+        }
 
 #endif
     }
