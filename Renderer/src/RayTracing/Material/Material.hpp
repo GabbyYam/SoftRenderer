@@ -10,6 +10,8 @@
 namespace soft {
     class Material {
     public:
+        Material() = default;
+
         Material(const vec3& albedo, const float roughness, const vec3& emission = vec3{0.0f}, const float emissionPower = 1.0f)
             : m_Albedo(albedo), m_Roughness(roughness), m_Emission(emission), m_EmissionPower(emissionPower)
         {
@@ -41,4 +43,5 @@ namespace soft {
         glm::vec3 m_Emission{0.0f};
         float     m_EmissionPower = -1.0f;
     };
+
 }  // namespace soft

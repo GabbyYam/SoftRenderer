@@ -95,10 +95,13 @@ namespace soft {
                     bool frustumCull = false;
 
                     for (int i = 0; i < 3; ++i) {
-                        auto pos = primitive[i].position;
-                        auto v   = mvp * glm::vec4(pos, 1.0f);
+                        auto  pos      = primitive[i].position;
+                        auto  v        = mvp * glm::vec4(pos, 1.0f);
+                        float bias     = 0.1f;
+                        float minBound = -v.w - bias, maxBound = v.w + bias;
 
-                        if (v.x <= -v.w - 0.001f || v.x >= v.w + 0.001f || v.y <= -v.w || v.y >= v.w || v.z <= -v.w || v.z >= v.w) {
+                        if (v.x <= minBound || v.x >= maxBound || v.y <= minBound || v.y >= maxBound || v.z <= minBound ||
+                            v.z >= maxBound) {
                             frustumCull = true;
                             break;
                         }

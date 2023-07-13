@@ -2,6 +2,15 @@
 
 ## Render
 
+### Rasterization
+
+- Vertex Assembly
+- Fragment Shading
+- Z-Test
+- 
+
+### Raytracing
+
 - Whitted Raytracing
 - Basic Path Tracing
 - Phong Shading
@@ -34,3 +43,6 @@
 
 ![2023-06-10 23'33'16](Assets/example_02.png)
 
+![2023-06-10 23'33'16](./assets/cornellbox.png)
+
+![2023-06-10 23'33'16](./assets/cornellbox_16bounce.png)

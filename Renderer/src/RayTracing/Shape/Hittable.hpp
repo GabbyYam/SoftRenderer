@@ -31,8 +31,7 @@ namespace soft {
         virtual bool Intersect(const Ray& ray, HitPayload& payload, float tMax) const
         {
             vec3  oc = ray.o - center;
-            float a = glm::dot(ray.d, ray.d), b = 2.0f * glm::dot(oc, ray.d),
-                  c = glm::dot(oc, oc) - radius * radius;
+            float a = glm::dot(ray.d, ray.d), b = 2.0f * glm::dot(oc, ray.d), c = glm::dot(oc, oc) - radius * radius;
 
             float discriminant = b * b - 4.0f * a * c;
 
@@ -60,16 +59,22 @@ namespace soft {
         float radius = 1;
     };
 
-    class Squad : public Hittable {
-    public:
-        virtual bool Intersect(const Ray& ray, HitPayload& payload, float tMax) const
+    struct Quad
+    {
+        glm::vec3 x0, x1, x2, x3;
+
+        void SetTransform(mat4 const& transform)
         {
-            return false;
+            x0 = transform * vec4(x0, 1.0);
+            x1 = transform * vec4(x1, 1.0);
+            x2 = transform * vec4(x2, 1.0);
+            x3 = transform * vec4(x3, 1.0);
         }
 
-        virtual void ClosestHit(const Ray& ray, HitPayload& payload) const {}
-
-    private:
+        void Reverse()
+        {
+            std::swap(x1, x2);
+        }
     };
 
 }  // namespace soft

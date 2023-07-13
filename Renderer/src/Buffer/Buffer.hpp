@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <memory>
 #include <spdlog/spdlog.h>
 #include <stdexcept>
@@ -40,18 +41,16 @@ namespace soft {
 
         virtual void MemSet(T val)
         {
-            for (auto i = 0; i < _width * _height; ++i)
-                _buffer[i] = val;
+            // for (auto i = 0; i < _width * _height; ++i)
+            //     _buffer[i] = val;
+
+            std::fill(_buffer, _buffer + (_width * _height), val);
         }
 
         virtual void Set(size_t x, size_t y, T val)
         {
             size_t index = x + y * _width;
-            if (index < 0 || index >= _width * _height) {
-                spdlog::debug("out of buffer range");
-                throw new std::runtime_error("out of range");
-            }
-            _buffer[index] = val;
+            Set(index, val);
         }
 
         virtual void Set(size_t index, T val)

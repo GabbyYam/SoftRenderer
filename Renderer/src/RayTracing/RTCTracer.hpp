@@ -14,6 +14,7 @@
 #include <vector>
 
 namespace soft {
+
     class RTCTracer : public Renderer {
     public:
         RTCTracer();
@@ -27,6 +28,7 @@ namespace soft {
         void Initialize();
         void AddSphere(const vec3& center, float radius, int materialIndex);
         void AddTriangle(const Primitive& primitive, int materialIndex);
+        void AddQuad(const Quad& quad, int materialIndex);
         void SetupScene();
         void AddModel(const std::shared_ptr<Model> model, int materialIndex);
 
@@ -39,6 +41,6 @@ namespace soft {
 
         // My Scene Setting
         std::shared_ptr<Camera> m_ActiveCamera = nullptr;
-        std::shared_ptr<Scene>  m_ActiveScene  = nullptr;
+        std::shared_ptr<Scene>  m_ActiveScene  = std::make_shared<Scene>();
     };
 }  // namespace soft

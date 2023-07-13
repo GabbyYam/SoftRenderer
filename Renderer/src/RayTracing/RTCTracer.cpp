@@ -15,10 +15,12 @@
 #include <execution>
 #include <glm/common.hpp>
 #include <glm/detail/qualifier.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/fwd.hpp>
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/trigonometric.hpp>
 #include <memory>
 #include <oneapi/tbb/blocked_range.h>
 #include <oneapi/tbb/blocked_range2d.h>
@@ -29,8 +31,10 @@
 #include <unordered_map>
 #include <vcruntime.h>
 #include <vcruntime_string.h>
+#include <vector>
 
 namespace soft {
+
     RTCTracer::RTCTracer()
     {
         Initialize();
@@ -57,29 +61,9 @@ namespace soft {
         m_rtc_Device = rtcNewDevice(nullptr);
         m_rtc_Scene  = rtcNewScene(m_rtc_Device);
 
-        Material mat0        = {{1.0, 1.0, 1.0}, 1.0f};
-        Material mat1        = {{1, .3, .4}, 0.9f};
-        Material mat2        = {{0.9, 0.9, 0.9}, 1.0f};
-        Material mat3        = {{0.8, .1, .4}, .9};
-        Material lamp        = {{.9, .9, 0.9}, 0.3f};
-        lamp.m_Emission      = lamp.m_Albedo;
-        lamp.m_EmissionPower = 16;
-
-        if (m_ActiveScene == nullptr)
-            m_ActiveScene = std::make_shared<Scene>();
-
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat0));
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat1));
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat2));
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat3));
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(lamp));
-
         SetupScene();
-        AddSphere(vec3{0.0, 1.0f, -1.5f}, 1.0f, 1);
-        // AddSphere(vec3{0.0, 2.0f, 4.0f}, 1.0f, 3);
-        // AddSphere(vec3{-1.5, 1.0f, 0.0f}, 1.0f, 2);
-        // AddSphere(vec3{1.5, 1.0f, 0.0f}, 1.0f, 2);
-        AddSphere(vec3{0.0, -100.0f, 0.0f}, 100.f, 1);
+        // AddSphere(vec3{0.0, 1.0f, 0.0f}, 1.0f, 1);
+        // AddSphere(vec3{0.0, -100.0f, 0.0f}, 100.f, 0);
     }
 
     RTCRayHit RTCTracer::TraceRay(const Ray& ray)
@@ -114,8 +98,7 @@ namespace soft {
             memset(m_AccumulatedData, 0, m_Width * m_Height * sizeof(glm::vec3));
 
 #define STL_PAR 1
-
-        // #if STL_PAR
+#if STL_PAR
         std::for_each(std::execution::par, begin(m_VerticalIter), end(m_VerticalIter), [this](uint32_t j) {
             std::for_each(std::execution::par, begin(m_HorizontalIter), end(m_HorizontalIter), [this, j](uint32_t i) {
                 vec3 color = PerPixel(i, j);
@@ -128,35 +111,47 @@ namespace soft {
             });
         });
 
-        // #elif OMP_PAR
-        // #    pragma omp parallel for
-        //         for (int j = 0; j < m_Height; ++j) {
-        // #    pragma omp parallel for
-        //             for (int i = 0; i < m_Width; ++i) {
-        //                 vec3 color = PerPixel(i, j);
-        //                 int  index = i + j * m_FramebufferImage->GetWidth();
-        //                 m_AccumulatedData[index] += color;
+#elif OMP_PAR
+#    pragma omp parallel for
+        for (int j = 0; j < m_Height; ++j) {
+#    pragma omp parallel for
+            for (int i = 0; i < m_Width; ++i) {
+                vec3 color = PerPixel(i, j);
+                int  index = i + j * m_FramebufferImage->GetWidth();
+                m_AccumulatedData[index] += color;
 
-        //                 vec3 accumulateColor = m_AccumulatedData[index];
-        //                 accumulateColor /= (float)m_FrameIndex;
-        //                 SetPixelColor(i, j, accumulateColor);
-        //             }
-        //         }
-        // #else
-        //         tbb::parallel_for(tbb::blocked_range2d<size_t>(0, m_Height, 0, m_Width), [&](tbb::blocked_range2d<size_t> r) {
-        //             for (size_t j = r.rows().begin(); j < r.rows().end(); ++j) {
-        //                 for (size_t i = r.cols().begin(); i < r.cols().end(); ++i) {
-        //                     vec3 color = PerPixel(i, j);
-        //                     int  index = i + j * m_FramebufferImage->GetWidth();
-        //                     m_AccumulatedData[index] += color;
+                vec3 accumulateColor = m_AccumulatedData[index];
+                accumulateColor /= (float)m_FrameIndex;
+                SetPixelColor(i, j, accumulateColor);
+            }
+        }
+#elif TBB_PAR
+        tbb::parallel_for(tbb::blocked_range2d<size_t>(0, m_Height, 0, m_Width), [&](tbb::blocked_range2d<size_t> r) {
+            for (size_t j = r.rows().begin(); j < r.rows().end(); ++j) {
+                for (size_t i = r.cols().begin(); i < r.cols().end(); ++i) {
+                    vec3 color = PerPixel(i, j);
+                    int  index = i + j * m_FramebufferImage->GetWidth();
+                    m_AccumulatedData[index] += color;
 
-        //                     vec3 accumulateColor = m_AccumulatedData[index];
-        //                     accumulateColor /= (float)m_FrameIndex;
-        //                     SetPixelColor(i, j, accumulateColor);
-        //                 }
-        //             }
-        //         });
-        // #endif
+                    vec3 accumulateColor = m_AccumulatedData[index];
+                    accumulateColor /= (float)m_FrameIndex;
+                    SetPixelColor(i, j, accumulateColor);
+                }
+            }
+        });
+#else
+        std::for_each(begin(m_VerticalIter), end(m_VerticalIter), [this](uint32_t j) {
+            std::for_each(begin(m_HorizontalIter), end(m_HorizontalIter), [this, j](uint32_t i) {
+                vec3 color = PerPixel(i, j);
+                int  index = i + j * m_FramebufferImage->GetWidth();
+                m_AccumulatedData[index] += color;
+
+                vec3 accumulateColor = m_AccumulatedData[index];
+                accumulateColor /= (float)m_FrameIndex;
+                SetPixelColor(i, j, accumulateColor);
+            });
+        });
+#endif
 
         ++m_FrameIndex;
         m_FramebufferImage->SetData(m_ImageData);
@@ -167,7 +162,7 @@ namespace soft {
         vec3  light{0.0f};
         vec3  contribution{1.0f};
         vec3  attenuation{1.0f};
-        Ray   ray({m_ActiveCamera->GetPosition(), m_ActiveCamera->GetRayDirection(x, y)});
+        Ray   ray(m_ActiveCamera->GetPosition(), m_ActiveCamera->GetRayDirection(x, y));
         float NoL = 1.0f;
         vec3  normal;
 
@@ -209,7 +204,7 @@ namespace soft {
             // NoL = glm::dot(normalize(lightSetting.directionalLight), normalize(normal));
             // NoL = max(0.0f, NoL);
 
-            light += material->Emission() * contribution * NoL;
+            light += material->Emission() * contribution;
             ray = material->Scatter(ray, payload);
         }
 
@@ -218,15 +213,79 @@ namespace soft {
         // if (lightSetting.useEnvironmentMap)
         //     skybox = m_EnvironmentMap->SampleCube(ray.d) * 100.0f;
 
-        return (light + skybox * contribution * NoL) * lightSetting.lightIntensity * lightSetting.lightColor;
+        // return (light + skybox * contribution * NoL) * lightSetting.lightIntensity * lightSetting.lightColor;
+        return light;
     }
 
     void RTCTracer::SetupScene()
     {
+        Material white              = {{1.0, 1.0, 1.0}, 1.0f};
+        Material pink               = {{1, .3, .4}, 1.0f};
+        Material green              = {{0.1, 0.9, 0.1}, 1.0f};
+        Material red                = {{0.9, .1, .1}, 1.0};
+        Material lightSource        = {{.9, .9, 0.9}, 1.0f};
+        lightSource.m_Emission      = vec3(1.0);
+        lightSource.m_EmissionPower = 8;
+        Material glass              = {{.9, .9, .9}, 0.00f};
+
+        if (m_ActiveScene == nullptr)
+            m_ActiveScene = std::make_shared<Scene>();
+
+        auto& materials = m_ActiveScene->materials;
+        materials.resize(10);
+        materials[0] = std::make_shared<Material>(white);
+        materials[1] = std::make_shared<Material>(pink);
+        materials[2] = std::make_shared<Material>(green);
+        materials[3] = std::make_shared<Material>(red);
+        materials[4] = std::make_shared<Material>(lightSource);
+        materials[5] = std::make_shared<Material>(glass);
+#define BOX 1
+#ifdef Model
         for (auto& model : m_ActiveScene->models) {
             // int randomIndex = Walnut::Random::UInt() % m_ActiveScene->materials.size();
             AddModel(model, 0);
         }
+#elif BOX
+        auto cube = std::vector<Quad>{
+            {{-1, -1, 1}, {-1, -1, -1}, {-1, 1, 1}, {-1, 1, -1}}, {{1, -1, 1}, {1, 1, 1}, {1, -1, -1}, {1, 1, -1}},
+            {{1, 1, -1}, {1, 1, 1}, {-1, 1, -1}, {-1, 1, 1}},     {{1, -1, -1}, {-1, -1, -1}, {1, -1, 1}, {-1, -1, 1}},
+            {{-1, -1, -1}, {1, -1, -1}, {-1, 1, -1}, {1, 1, -1}}, {{-1, -1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, 1}},
+        };
+
+        // Cornell box
+        AddQuad(cube[0], 3);
+        AddQuad(cube[1], 2);
+        AddQuad(cube[2], 0);
+        AddQuad(cube[3], 0);
+        AddQuad(cube[4], 0);
+        // AddQuad({{-1, -1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, 1}}, 0);
+        // AddSphere(vec3{0.0, 0.0f, 0.0f}, 0.4f, 5);
+        // AddSphere(vec3{0.0, -100.0f, 0.0f}, 100.f, 5);
+
+        // Lamp
+        // AddQuad(cube[3], 4);
+        AddQuad({{0.25, 0.99, -0.25}, {0.25, 0.99, 0.25}, {-0.25, 0.99, -0.25}, {-0.25, 0.99, 0.25}}, 4);
+
+        // Object
+        auto translate = glm::translate(mat4(1.0), vec3(-0.35, -0.4, -0.3));
+        auto rotate    = glm::rotate(mat4(1.0), glm::radians(15.0f), vec3(0, 1, 0));
+        auto scale     = glm::scale(mat4(1.0), vec3(0.3, 0.6, 0.3));
+        for (auto quad : cube) {
+            quad.Reverse();
+            quad.SetTransform(translate * rotate * scale);
+            AddQuad(quad, 0);
+        }
+
+        translate = glm::translate(mat4(1.0), vec3(0.35, -0.7, 0.3));
+        rotate    = glm::rotate(mat4(1.0), glm::radians(-15.0f), vec3(0, 1, 0));
+        scale     = glm::scale(mat4(1.0), vec3(0.3, 0.3, 0.3));
+        for (auto quad : cube) {
+            quad.Reverse();
+            quad.SetTransform(translate * rotate * scale);
+            AddQuad(quad, 0);
+        }
+
+#endif
     }
 
     void RTCTracer::AddModel(const std::shared_ptr<Model> model, int materialIndex)
@@ -329,6 +388,13 @@ namespace soft {
         auto& geometry = m_ActiveScene->geometries.emplace_back(std::make_shared<Geometry>());
 
         debug("Triangle geomId = {}", id);
+    }
+
+    void RTCTracer::AddQuad(Quad const& quad, int materialIndex)
+    {
+        vec3 x0 = quad.x0, x1 = quad.x1, x2 = quad.x2, x3 = quad.x3;
+        AddTriangle({x0, x1, x2}, materialIndex);
+        AddTriangle({x2, x1, x3}, materialIndex);
     }
 
     vec3 RTCTracer::Barycentric(const Primitive& primitive, const vec3& p)

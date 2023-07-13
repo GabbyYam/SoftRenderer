@@ -1,3 +1,4 @@
+
 #include "FileDialogs.hpp"
 #include "Geometry/Model.hpp"
 #include "Geometry/Scene.hpp"
@@ -34,7 +35,7 @@ public:
         spdlog::set_level(spdlog::level::debug);
         std::shared_ptr<soft::Model> model = std::make_shared<soft::Model>(s_MeshFilename);
         std::shared_ptr<soft::Scene> scene = std::make_shared<soft::Scene>();
-        // scene->models.push_back(model);
+        scene->models.push_back(model);
 
         m_Rasterizer     = std::make_shared<soft::Rasterizer>(scene);
         m_RayTracer      = std::make_shared<soft::RTCTracer>(scene);
