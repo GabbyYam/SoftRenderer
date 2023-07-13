@@ -12,7 +12,6 @@
 
 - Whitted Raytracing
 - Basic Path Tracing
-- Phong Shading
 
 ## Geometry
 
@@ -22,14 +21,17 @@
 
 ## Acceleration
 
-- std::execution::par
-- TBB parallel for
-- embree3 for BVH ray intersection
+- Multi-Threading
+  - std::execution::par
+  - TBB parallel for
+  - OMP for
 
-## Denoise
+- BVH
+
+## Denoising
 
 - Temporal Filter
-- OIDN
+- oidn
 
 ## TODO
 
