@@ -1,6 +1,7 @@
 #include "Camera.hpp"
 #include "Camera/Camera.hpp"
 #include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/quaternion_geometric.hpp>
 #include <glm/geometric.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -137,7 +138,8 @@ namespace soft {
                 glm::vec4 target = m_InverseProjection * glm::vec4(coord.x, coord.y, 1, 1);
                 glm::vec3 rayDirection =
                     glm::vec3(m_InverseView * glm::vec4(glm::normalize(glm::vec3(target) / target.w), 0));  // World space
-                m_RayDirections[x + y * m_ViewportWidth] = rayDirection;
+
+                m_RayDirections[x + y * m_ViewportWidth] = normalize(rayDirection);
             }
         }
     }

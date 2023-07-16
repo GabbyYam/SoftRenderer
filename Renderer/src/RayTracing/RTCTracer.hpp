@@ -28,7 +28,7 @@ namespace soft {
         void Initialize();
         void AddSphere(const vec3& center, float radius, int materialIndex);
         void AddTriangle(const Primitive& primitive, int materialIndex);
-        void AddQuad(const Quad& quad, int materialIndex);
+        void AddQuad(const Quad& quad, int materialIndex, bool reverseNormal = false);
         void SetupScene();
         void AddModel(const std::shared_ptr<Model> model, int materialIndex);
 

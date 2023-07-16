@@ -3,6 +3,7 @@
 #include <RayTracing/Ray.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/dual_quaternion.hpp>
+#include <type_traits>
 
 using namespace glm;
 
@@ -71,10 +72,7 @@ namespace soft {
             x3 = transform * vec4(x3, 1.0);
         }
 
-        void Reverse()
-        {
-            std::swap(x1, x2);
-        }
+        void Reverse() {}
     };
 
 }  // namespace soft

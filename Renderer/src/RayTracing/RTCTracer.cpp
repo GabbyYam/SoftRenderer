@@ -10,16 +10,20 @@
 #include "Walnut/Logger.hpp"
 #include "Walnut/Random.h"
 #include "tbb/parallel_for.h"
+#include <assimp/texture.h>
+#include <cstddef>
 #include <embree3/rtcore_device.h>
 #include <embree3/rtcore_scene.h>
 #include <execution>
 #include <glm/common.hpp>
 #include <glm/detail/qualifier.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/quaternion_geometric.hpp>
 #include <glm/fwd.hpp>
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/dual_quaternion.hpp>
 #include <glm/trigonometric.hpp>
 #include <memory>
 #include <oneapi/tbb/blocked_range.h>
@@ -62,8 +66,9 @@ namespace soft {
         m_rtc_Scene  = rtcNewScene(m_rtc_Device);
 
         SetupScene();
-        // AddSphere(vec3{0.0, 1.0f, 0.0f}, 1.0f, 1);
-        // AddSphere(vec3{0.0, -100.0f, 0.0f}, 100.f, 0);
+
+        m_SampleIter.resize(4);
+        iota(begin(m_SampleIter), end(m_SampleIter), 0);
     }
 
     RTCRayHit RTCTracer::TraceRay(const Ray& ray)
@@ -102,7 +107,15 @@ namespace soft {
         std::for_each(std::execution::par, begin(m_VerticalIter), end(m_VerticalIter), [this](uint32_t j) {
             std::for_each(std::execution::par, begin(m_HorizontalIter), end(m_HorizontalIter), [this, j](uint32_t i) {
                 vec3 color = PerPixel(i, j);
-                int  index = i + j * m_FramebufferImage->GetWidth();
+
+                if (color.r != color.r)
+                    color.r = 0.0;
+                if (color.g != color.g)
+                    color.g = 0.0;
+                if (color.b != color.b)
+                    color.b = 0.0;
+
+                int index = i + j * m_FramebufferImage->GetWidth();
                 m_AccumulatedData[index] += color;
 
                 vec3 accumulateColor = m_AccumulatedData[index];
@@ -161,17 +174,33 @@ namespace soft {
     {
         vec3 Lo(0.0f);
         vec3 contribution(1.0f);
-        Ray  ray(m_ActiveCamera->GetPosition(), m_ActiveCamera->GetRayDirection(x, y));
 
-        // Simulate multi-bounce
-        for (int i = 0; i < rayTraceSetting.bounce && Walnut::Random::Float() <= rayTraceSetting.prob; ++i) {
+        vec3 r = Walnut::Random::Vec3() * 0.001f;
+        Ray  ray(m_ActiveCamera->GetPosition(), m_ActiveCamera->GetRayDirection(x, y) + r);
+
+        float prob           = rayTraceSetting.prob;
+        float probMultiplier = 1.0 / prob;
+        float NdotL          = 0.0f;
+
+        int bounce = 1;
+
+        while (true) {
             // Intersect with scene
             auto payload = TraceRay(ray);
-            if (payload.hit.geomID == RTC_INVALID_GEOMETRY_ID)
-                break;
 
-            // Default value
-            vec3 normal = {payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z};
+            if (payload.hit.geomID == RTC_INVALID_GEOMETRY_ID) {
+                if (lightSetting.useEnvironmentMap) {
+                    vec3 Li = m_EnvironmentMap ? m_EnvironmentMap->SampleCube(ray.d) : vec3{0.6, 0.7, 0.9};
+                    Lo += Li * contribution;
+                }
+                break;
+            }
+
+            // Cull Back Face
+            vec3 N  = normalize(vec3{payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z});
+            vec3 wi = -ray.d;
+            if (dot(N, wi) < 0.0f)
+                break;
 
             // Interpolate primitive
             auto geometry = m_ActiveScene->geometries[payload.hit.geomID];
@@ -181,7 +210,7 @@ namespace soft {
                 auto coord     = Barycentric(primitive, ray.At(payload.ray.tfar));
 
                 // Normal
-                normal = primitive[0].normal * coord.x + primitive[1].normal * coord.y + primitive[2].normal * coord.z;
+                N = primitive[0].normal * coord.x + primitive[1].normal * coord.y + primitive[2].normal * coord.z;
 
                 // Sample texture
                 if (m_ActiveScene->textureIndex[payload.hit.geomID] >= 0) {
@@ -193,36 +222,69 @@ namespace soft {
                 }
             }
 
-            // Scatter ray & Calculate material and
             auto material = m_ActiveScene->materials[m_ActiveScene->materialIndex[payload.hit.geomID]];
 
-            contribution *= material->m_Albedo;
+            if (bounce++ == 1)
+                Lo += material->Emission();
 
-            float NdotL = max(0.0f, dot(normalize(ray.d), normalize(-normal)));
+            // Direct Light
+            if (rayTraceSetting.sampleFromLight) {
+                // Sample random point from light source
+                vec3  lightPosition{-0.25 + 0.5 * Walnut::Random::Float(), 1, -0.25 + 0.5 * Walnut::Random::Float()};
+                vec3  p        = ray.At(payload.ray.tfar);
+                vec3  lightToP = p - lightPosition;
+                float distance = glm::length(lightToP);
+                lightToP /= distance;
+                auto targetPayload = TraceRay(Ray(p + N * bias, -lightToP));
 
-            Lo += material->Emission() * contribution * NdotL;
-            ray = material->Scatter(ray, payload);
+                if (targetPayload.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
+                    auto targetMaterial = m_ActiveScene->materials[m_ActiveScene->materialIndex[targetPayload.hit.geomID]];
+                    if (targetMaterial->IsLightSource()) {
+                        NdotL     = max(0.0f, dot(-lightToP, N));
+                        vec3 Li   = targetMaterial->Emission();
+                        vec3 brdf = material->EvaluateBRDF(payload, wi, -lightToP);
+
+                        float lightArea = 0.5f * 0.5f;
+                        float pdf       = 1.0 / lightArea;
+
+                        float attenuation   = min(1.0f, 1.0f / (distance * distance));
+                        vec3  contributionD = (brdf / pdf) * NdotL;
+
+                        Lo += Li * contributionD * contribution * attenuation;
+                    }
+                }
+            }
+
+            // Russian Roulette or Hit Light
+            if (Walnut::Random::Float() > prob || material->IsLightSource())
+                break;
+
+            // Calculate Indirect Light
+            auto  sampleRay = material->Sample(ray, payload);
+            vec3  brdf      = material->EvaluateBRDF(payload, -ray.d, sampleRay.ray.d);
+            float pdf       = sampleRay.pdf;
+
+            NdotL = max(0.0f, dot(wi, N));
+            contribution *= (brdf / pdf) * NdotL;
+
+            ray = sampleRay.ray;
         }
-
-        // vec3 skybox{0.6f, .7f, .9f};
-
-        // if (lightSetting.useEnvironmentMap)
-        //     skybox = m_EnvironmentMap->SampleCube(ray.d) * 100.0f;
-
-        // return (light + skybox * contribution * NoL) * lightSetting.lightIntensity * lightSetting.lightColor;
         return Lo;
     }
 
     void RTCTracer::SetupScene()
     {
-        Material white              = {{1.0, 1.0, 1.0}, 1.0f};
-        Material pink               = {{1, .3, .4}, 1.0f};
-        Material green              = {{0.1, 0.9, 0.1}, 1.0f};
-        Material red                = {{0.9, .1, .1}, 1.0};
-        Material lightSource        = {{.9, .9, 0.9}, 1.0f};
-        lightSource.m_Emission      = vec3(1.0);
-        lightSource.m_EmissionPower = 8;
-        Material glass              = {{.9, .9, .9}, 0.00f};
+        Material white      = {{1.0, 1.0, 1.0}};
+        Material whiteGloss = {{1.0, 1.0, 1.0}};
+        Material pink       = {{1, .3, .4}};
+        Material green      = {{0.1, 0.9, 0.1}};
+        Material red        = {{0.9, .1, .1}};
+        // Material lightSource = {vec3(1.0), 1.0f, vec3(0.85, 0.8, 0.4), 30.0f};
+        Material    lightSource  = {vec3(1.0), vec3(1.0), 16.0f};
+        Material    glass        = {{.9, .9, .9}};
+        Material    glossy       = {vec3{1.0f}};
+        PBRMaterial metal        = PBRMaterial{vec3{1.0f}, 0.3f, 1.0f};
+        PBRMaterial glossySphere = PBRMaterial{vec3{1.0f}, 0.1f, 0.0f};
 
         if (m_ActiveScene == nullptr)
             m_ActiveScene = std::make_shared<Scene>();
@@ -230,11 +292,14 @@ namespace soft {
         auto& materials = m_ActiveScene->materials;
         materials.resize(10);
         materials[0] = std::make_shared<Material>(white);
-        materials[1] = std::make_shared<Material>(pink);
+        materials[1] = std::make_shared<Material>(whiteGloss);
         materials[2] = std::make_shared<Material>(green);
         materials[3] = std::make_shared<Material>(red);
         materials[4] = std::make_shared<Material>(lightSource);
         materials[5] = std::make_shared<Material>(glass);
+        materials[6] = std::make_shared<PBRMaterial>(metal);
+        materials[7] = std::make_shared<Material>(glossy);
+        materials[8] = std::make_shared<PBRMaterial>(glossySphere);
 #define BOX 1
 #ifdef Model
         for (auto& model : m_ActiveScene->models) {
@@ -242,42 +307,41 @@ namespace soft {
             AddModel(model, 0);
         }
 #elif BOX
+
         auto cube = std::vector<Quad>{
             {{-1, -1, 1}, {-1, -1, -1}, {-1, 1, 1}, {-1, 1, -1}}, {{1, -1, 1}, {1, 1, 1}, {1, -1, -1}, {1, 1, -1}},
             {{1, 1, -1}, {1, 1, 1}, {-1, 1, -1}, {-1, 1, 1}},     {{1, -1, -1}, {-1, -1, -1}, {1, -1, 1}, {-1, -1, 1}},
-            {{-1, -1, -1}, {1, -1, -1}, {-1, 1, -1}, {1, 1, -1}}, {{-1, -1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, 1}},
+            {{-1, -1, -1}, {1, -1, -1}, {-1, 1, -1}, {1, 1, -1}}, {{-1, -1, 1}, {-1, 1, 1}, {1, -1, 1}, {1, 1, 1}},
         };
 
         // Cornell box
-        AddQuad(cube[0], 3);
-        AddQuad(cube[1], 2);
-        AddQuad(cube[2], 0);
+        // AddQuad(cube[0], 3);
+        // AddQuad(cube[1], 2);
+        // AddQuad(cube[2], 0);
         AddQuad(cube[3], 0);
-        AddQuad(cube[4], 0);
-        // AddQuad({{-1, -1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, 1}}, 0);
-        // AddSphere(vec3{0.0, 0.0f, 0.0f}, 0.4f, 5);
+        // AddQuad(cube[4], 0);
+        AddSphere(vec3{0.0, 0.0f, 0.0f}, 0.4f, 8);
 
         // Lamp
-        AddQuad({{0.25, 0.99, -0.25}, {0.25, 0.99, 0.25}, {-0.25, 0.99, -0.25}, {-0.25, 0.99, 0.25}}, 4);
+        float bias = 0.0001f;
+        AddQuad({{0.25, 1.0 - bias, -0.25}, {0.25, 1.0 - bias, 0.25}, {-0.25, 1.0 - bias, -0.25}, {-0.25, 1.0 - bias, 0.25}}, 4);
 
         // // Object
-        auto translate = glm::translate(mat4(1.0), vec3(-0.35, -0.4, -0.3));
-        auto rotate    = glm::rotate(mat4(1.0), glm::radians(15.0f), vec3(0, 1, 0));
-        auto scale     = glm::scale(mat4(1.0), vec3(0.3, 0.6, 0.3));
-        for (auto quad : cube) {
-            quad.Reverse();
-            quad.SetTransform(translate * rotate * scale);
-            AddQuad(quad, 0);
-        }
+        // auto translate = glm::translate(mat4(1.0), vec3(-0.35, -0.4, -0.3));
+        // auto rotate    = glm::rotate(mat4(1.0), glm::radians(15.0f), vec3(0, 1, 0));
+        // auto scale     = glm::scale(mat4(1.0), vec3(0.3, 0.6, 0.3));
+        // for (auto quad : cube) {
+        //     quad.SetTransform(translate * rotate * scale);
+        //     AddQuad(quad, 0, true);
+        // }
 
-        translate = glm::translate(mat4(1.0), vec3(0.35, -0.7, 0.3));
-        rotate    = glm::rotate(mat4(1.0), glm::radians(-15.0f), vec3(0, 1, 0));
-        scale     = glm::scale(mat4(1.0), vec3(0.3, 0.3, 0.3));
-        for (auto quad : cube) {
-            quad.Reverse();
-            quad.SetTransform(translate * rotate * scale);
-            AddQuad(quad, 0);
-        }
+        // translate = glm::translate(mat4(1.0), vec3(0.35, -0.7, 0.3));
+        // rotate    = glm::rotate(mat4(1.0), glm::radians(-15.0f), vec3(0, 1, 0));
+        // scale     = glm::scale(mat4(1.0), vec3(0.3, 0.3, 0.3));
+        // for (auto quad : cube) {
+        //     quad.SetTransform(translate * rotate * scale);
+        //     AddQuad(quad, 0, true);
+        // }
 
 #endif
     }
@@ -384,11 +448,17 @@ namespace soft {
         debug("Triangle geomId = {}", id);
     }
 
-    void RTCTracer::AddQuad(Quad const& quad, int materialIndex)
+    void RTCTracer::AddQuad(Quad const& quad, int materialIndex, bool reverseNormal)
     {
         vec3 x0 = quad.x0, x1 = quad.x1, x2 = quad.x2, x3 = quad.x3;
-        AddTriangle({x0, x1, x2}, materialIndex);
-        AddTriangle({x2, x1, x3}, materialIndex);
+        if (reverseNormal) {
+            AddTriangle({x2, x1, x0}, materialIndex);
+            AddTriangle({x3, x1, x2}, materialIndex);
+        }
+        else {
+            AddTriangle({x0, x1, x2}, materialIndex);
+            AddTriangle({x2, x1, x3}, materialIndex);
+        }
     }
 
     vec3 RTCTracer::Barycentric(const Primitive& primitive, const vec3& p)

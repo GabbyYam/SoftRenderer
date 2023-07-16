@@ -72,13 +72,12 @@ namespace soft {
 
         const vec3 Sample2D(float u, float v) const
         {
+            vec3 debugColor = {.9f, 0.0f, .7f};
+            [[unlikely]] if (u < 0.0f || v < 0.0f || u > 1.0f || v > 1.0f)
+                return debugColor;
             if (m_Format == Walnut::ImageFormat::RGBA) {
-                if (m_ImageData == nullptr)
-                    return vec3{0.0f};
-
-                vec3 debugColor = {.9f, 0.0f, .7f};
-                if (u < 0.0f || v < 0.0f || u > 1.0f || v > 1.0f)
-                    return debugColor;
+                [[unlikely]] if (m_ImageData == nullptr)
+                    return vec3(0.0f);
 
                 int i = u * (m_Width - 1), j = v * (m_Height - 1);
                 int pixelIndex = (i + j * m_Width) * (m_Channels - 1);
@@ -91,12 +90,8 @@ namespace soft {
                 return vec3(r, g, b) / 255.0f;
             }
             else {
-                if (m_HdrImageData == nullptr)
-                    return vec3{0.0f};
-
-                vec3 debugColor = {.9f, 0.0f, .7f};
-                if (u < 0.0f || v < 0.0f || u > 1.0f || v > 1.0f)
-                    return debugColor;
+                [[unlikely]] if (m_HdrImageData == nullptr)
+                    return vec3(0.0f);
 
                 int i = u * (m_Width - 1), j = v * (m_Height - 1);
                 int pixelIndex = (i + j * m_Width) * m_Channels;
@@ -104,9 +99,7 @@ namespace soft {
                 float r = m_HdrImageData[pixelIndex];
                 float g = m_HdrImageData[pixelIndex + 1];
                 float b = m_HdrImageData[pixelIndex + 2];
-                vec3  color{r, g, b};
-                color *= m_SolidColor;
-                return vec3(r, g, b) / 255.0f;
+                return vec3(r, g, b);
             }
         }
 

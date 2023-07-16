@@ -92,6 +92,11 @@ namespace soft {
             m_FrameIndex = 1;
         }
 
+        auto TotalFrameCount()
+        {
+            return m_FrameIndex;
+        }
+
         auto GetImageData()
         {
             return m_ImageData;
@@ -117,7 +122,7 @@ namespace soft {
         vec4*                          m_ImageData        = nullptr;
         vec3*                          m_AccumulatedData  = nullptr;
 
-        std::vector<uint32_t> m_VerticalIter, m_HorizontalIter;
+        std::vector<uint32_t> m_VerticalIter, m_HorizontalIter, m_SampleIter;
 
         uint32_t                   m_FrameIndex     = 0;
         std::shared_ptr<Texture2D> m_EnvironmentMap = nullptr;

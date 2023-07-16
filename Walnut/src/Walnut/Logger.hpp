@@ -5,8 +5,5 @@
 #include <spdlog/spdlog.h>
 namespace utils {
 
-    void debugColor(const glm::vec3& color)
-    {
-        spdlog::debug("color = {}, {}, {}", color.x, color.y, color.z);
-    }
+    void debugColor(const glm::vec3& color);
 }  // namespace utils

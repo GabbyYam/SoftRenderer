@@ -129,6 +129,7 @@ public:
 
             ImGui::Text("Frame rate: %.3f fps", 1000.f / m_LastTime);
             ImGui::Text("Frame cost: %.3f ms", m_LastTime);
+            ImGui::Text("Frame count: %d", m_ActiveRenderer->TotalFrameCount());
             // ImGui::Text("Camera Position: %.3f %.3f %.3f", m_Camera->GetPosition().x, m_Camera->GetPosition().y,
             //             m_Camera->GetPosition().z);
             ImGui::End();
@@ -138,10 +139,11 @@ public:
             ImGui::Begin("RT Setting");
             m_ConfigChange |= ImGui::Checkbox("Apply Ray Tracing", &m_ApplyRayTracing);
 
-            auto& maxBounce = m_ActiveRenderer->rayTraceSetting.bounce;
-            m_ConfigChange |= ImGui::InputInt("Ray Bounce", &maxBounce);
-            maxBounce = std::clamp(maxBounce, 0, 32);
+            // auto& maxBounce = m_ActiveRenderer->rayTraceSetting.bounce;
+            // m_ConfigChange |= ImGui::InputInt("Ray Bounce", &maxBounce);
+            // maxBounce = std::clamp(maxBounce, 0, 32);
             m_ConfigChange |= ImGui::SliderFloat("End Prob", &m_ActiveRenderer->rayTraceSetting.prob, 0.0, 1.0);
+            m_ConfigChange |= ImGui::Checkbox("Sample From Light", &m_ActiveRenderer->rayTraceSetting.sampleFromLight);
 
             ImGui::End();
         }
@@ -165,8 +167,8 @@ public:
                 ImGui::Checkbox("FXAA", &m_ActiveRenderer->postProcessingSetting.FXAA);
 
                 ImGui::Text("Tone Mapping");
-                m_ConfigChange |= ImGui::Checkbox("ACES", &m_ActiveRenderer->postProcessingSetting.ToneMapping);
-                m_ConfigChange |= ImGui::Checkbox("Gamma", &m_ActiveRenderer->postProcessingSetting.Gamma);
+                ImGui::Checkbox("ACES", &m_ActiveRenderer->postProcessingSetting.ToneMapping);
+                ImGui::Checkbox("Gamma", &m_ActiveRenderer->postProcessingSetting.Gamma);
             }
             ImGui::End();
         }
@@ -200,6 +202,8 @@ public:
         // 将vec4数据转换为8位整数数据
         const vec3*    pixelData = data;
         unsigned char* imagePtr  = imageBuffer;
+        uint32_t       channels  = 3;
+
         for (int i = 0; i < width * height; ++i) {
             // 提取vec4中的RGB分量，并将其映射到[0, 255]范围
             unsigned char r = static_cast<unsigned char>(pixelData->r * 255.0f);
@@ -215,11 +219,21 @@ public:
             ++pixelData;
         }
 
+        // 创建一个新的缓冲区来存储翻转后的图像数据
+        unsigned char* flipped_data = new unsigned char[width * height * channels];
+
+        // 上下翻转图像
+        for (int y = 0; y < height; y++) {
+            int flipped_y = height - 1 - y;
+            memcpy(flipped_data + flipped_y * width * channels, imageBuffer + y * width * channels, width * channels);
+        }
+
         // 写入PNG图像文件
-        stbi_write_png(filename, width, height, 3, imageBuffer, 0);
+        stbi_write_png(filename, width, height, channels, flipped_data, 0);
 
         // 释放缓冲区内存
         delete[] imageBuffer;
+        delete[] flipped_data;
     }
 
     void WriteFloatImage(const char* filename, const vec4* data, int width, int height)
@@ -230,6 +244,7 @@ public:
         // 将vec4数据转换为8位整数数据
         const vec4*    pixelData = data;
         unsigned char* imagePtr  = imageBuffer;
+        uint32_t       channels  = 4;
         for (int i = 0; i < width * height; ++i) {
             // 提取vec4中的RGB分量，并将其映射到[0, 255]范围
             unsigned char r = static_cast<unsigned char>(pixelData->r * 255.0f);
@@ -246,11 +261,21 @@ public:
             ++pixelData;
         }
 
+        // 创建一个新的缓冲区来存储翻转后的图像数据
+        unsigned char* flipped_data = new unsigned char[width * height * channels];
+
+        // 上下翻转图像
+        for (int y = 0; y < height; y++) {
+            int flipped_y = height - 1 - y;
+            memcpy(flipped_data + flipped_y * width * channels, imageBuffer + y * width * channels, width * channels);
+        }
+
         // 写入PNG图像文件
-        stbi_write_png(filename, width, height, 4, imageBuffer, 0);
+        stbi_write_png(filename, width, height, channels, flipped_data, 0);
 
         // 释放缓冲区内存
         delete[] imageBuffer;
+        delete[] flipped_data;
     }
 
     void convertFloat4ToFloat3(const float* inputFloat4, float* outputFloat3, int width, int height)

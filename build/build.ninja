@@ -179,6 +179,16 @@ build CMakeFiles/Walnut.dir/Walnut/src/Walnut/Input/Input.cpp.obj: CXX_COMPILER_
   TARGET_COMPILE_PDB = CMakeFiles\Walnut.dir\Walnut.pdb
   TARGET_PDB = Walnut.pdb
 
+build CMakeFiles/Walnut.dir/Walnut/src/Walnut/Logger.cpp.obj: CXX_COMPILER__Walnut_Release ../Walnut/src/Walnut/Logger.cpp || cmake_object_order_depends_target_Walnut
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  DEP_FILE = CMakeFiles\Walnut.dir\Walnut\src\Walnut\Logger.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -std=gnu++20
+  INCLUDES = -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem F:/VulkanSDK/Include -isystem "C:/Program Files (x86)/glm/include" -isystem "C:/Program Files (x86)/spdlog/include" -isystem D:/vcpkg/installed/x64-windows/include
+  OBJECT_DIR = CMakeFiles\Walnut.dir
+  OBJECT_FILE_DIR = CMakeFiles\Walnut.dir\Walnut\src\Walnut
+  TARGET_COMPILE_PDB = CMakeFiles\Walnut.dir\Walnut.pdb
+  TARGET_PDB = Walnut.pdb
+
 build CMakeFiles/Walnut.dir/Walnut/src/Walnut/Random.cpp.obj: CXX_COMPILER__Walnut_Release ../Walnut/src/Walnut/Random.cpp || cmake_object_order_depends_target_Walnut
   DEFINES = -DSPDLOG_COMPILED_LIB
   DEP_FILE = CMakeFiles\Walnut.dir\Walnut\src\Walnut\Random.cpp.obj.d
@@ -197,7 +207,7 @@ build CMakeFiles/Walnut.dir/Walnut/src/Walnut/Random.cpp.obj: CXX_COMPILER__Waln
 #############################################
 # Link the static library Walnut.lib
 
-build Walnut.lib: CXX_STATIC_LIBRARY_LINKER__Walnut_Release CMakeFiles/Walnut.dir/Walnut/src/Walnut/Application.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/ImGui/ImGuiBuild.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/Image.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/Input/Input.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/Random.cpp.obj || 3rdparty/glfw/src/glfw3.lib imgui.lib
+build Walnut.lib: CXX_STATIC_LIBRARY_LINKER__Walnut_Release CMakeFiles/Walnut.dir/Walnut/src/Walnut/Application.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/ImGui/ImGuiBuild.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/Image.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/Input/Input.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/Logger.cpp.obj CMakeFiles/Walnut.dir/Walnut/src/Walnut/Random.cpp.obj || 3rdparty/glfw/src/glfw3.lib imgui.lib
   LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt
   OBJECT_DIR = CMakeFiles\Walnut.dir
   POST_BUILD = cd .

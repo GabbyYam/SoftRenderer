@@ -42,12 +42,4 @@
 
 ## Gallery
 
-![image-20230630155110655](Assets/editor.png)
-
-![2023-06-10 23'33'16](Assets/example_01.png)
-
-![2023-06-10 23'33'16](Assets/example_02.png)
-
-![2023-06-10 23'33'16](Assets/CornellBox_Sphere_16_Bounce_NdotL_denoised.png)
-
-![2023-06-10 23'33'16](Assets/CornellBox_16_Bounce_NdotL_denoised.png)
+![2023-06-10 23'33'16](Assets/CornellBox.png)

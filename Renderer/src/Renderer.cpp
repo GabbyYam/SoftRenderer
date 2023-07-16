@@ -2,8 +2,10 @@
 #include "Texture/Texture2D.hpp"
 #include "Walnut/Image.h"
 #include <algorithm>
+#include <cmath>
 #include <execution>
 #include <glm/geometric.hpp>
+#include <glm/vector_relational.hpp>
 #include <memory>
 #include <spdlog/spdlog.h>
 #include <stdint.h>
@@ -49,6 +51,10 @@ namespace soft {
             return;
         }
 
+        // c.x = !std::isnan(c.x) ? c.x : 0.0f;
+        // c.y = !std::isnan(c.y) ? c.y : 0.0f;
+        // c.z = !std::isnan(c.z) ? c.z : 0.0f;
+
         if (postProcessingSetting.ToneMapping)
             c = ACES_ToneMapping(c);
 
@@ -57,56 +63,10 @@ namespace soft {
 
         c = glm::clamp(c, 0.0f, 1.0f);
 
-        // m_ImageData[x + y * m_FramebufferImage->GetWidth()] = utils::ConvertToRGBA(c);
         m_ImageData[x + y * m_FramebufferImage->GetWidth()] = vec4(c, 1.0);
     }
 
-    void Renderer::FXAA()
-    {
-        // if (postProcessingSetting.MT) {
-        //     std::for_each(std::execution::par, begin(m_VerticalIter) + 1, end(m_VerticalIter) - 1, [this](uint32_t j) {
-        //         std::for_each(std::execution::par, begin(m_HorizontalIter) + 1, end(m_HorizontalIter) - 1, [this, j](uint32_t i) {
-        //             vec3 a = utils::ConvertToColor(m_ImageData, i - 1, j, m_Width),
-        //                  b = utils::ConvertToColor(m_ImageData, i + 1, j, m_Width),
-        //                  c = utils::ConvertToColor(m_ImageData, i, j - 1, m_Width),
-        //                  d = utils::ConvertToColor(m_ImageData, i, j + 1, m_Width),
-        //                  o = utils::ConvertToColor(m_ImageData, i, j, m_Width);
-
-        //             float left = glm::length(a), right = glm::length(b), top = glm::length(c), bottom = glm::length(d);
-
-        //             float mn        = std::min({left, right, top, bottom});
-        //             float mx        = std::max({left, right, top, bottom});
-        //             float contrast  = mx - mn;
-        //             float threshold = contrast * 0.25f;
-        //             float blend     = 0.25f;
-        //             if (contrast > 0.8)
-        //                 SetPixelColor(i, j, blend * (a + b + c + d));
-        //         });
-        //     });
-        // }
-        // else {
-        //     for (uint32_t j = 1; j < m_Height - 1; ++j) {
-        //         for (uint32_t i = 1; i < m_Width - 1; ++i) {
-        //             vec3 a = utils::ConvertToColor(m_ImageData, i - 1, j, m_Width),
-        //                  b = utils::ConvertToColor(m_ImageData, i + 1, j, m_Width),
-        //                  c = utils::ConvertToColor(m_ImageData, i, j - 1, m_Width),
-        //                  d = utils::ConvertToColor(m_ImageData, i, j + 1, m_Width),
-        //                  o = utils::ConvertToColor(m_ImageData, i, j, m_Width);
-
-        //             float left = glm::length(a), right = glm::length(b), top = glm::length(c), bottom = glm::length(d);
-
-        //             float mn        = std::min({left, right, top, bottom});
-        //             float mx        = std::max({left, right, top, bottom});
-        //             float contrast  = mx - mn;
-        //             float threshold = contrast * 0.25f;
-        //             float blend     = 0.25f;
-        //             if (contrast > 0.8)
-        //                 SetPixelColor(i, j, blend * (a + b + c + d));
-        //         }
-        //     }
-        // }
-        // m_FramebufferImage->SetData(m_ImageData);
-    }
+    void Renderer::FXAA() {}
 
     void Renderer::LoadEnvironmentMap(std::string_view path)
     {

@@ -25,68 +25,11 @@
 
 namespace soft {
 
-    RayTracer::RayTracer()
-    {
-        m_ActiveScene = std::make_shared<Scene>();
-
-        Sphere   s1{{0.0f, 1.0f, 0.0f}, 1.0f};
-        Sphere   s2{{0.0f, -100.0f, 0.0f}, 100.0f};
-        Sphere   s3{{0.0f, 0.0f, -10.0f}, 5.0f};
-        Material mat1        = {{1, .3, .4}, 0};
-        Material mat2        = {{1., .8, 1.}, 0};
-        Material mat3        = {{0.8, .1, .4}, .9};
-        mat3.m_Emission      = mat3.m_Albedo;
-        mat3.m_EmissionPower = 16;
-        s1.materialIndex     = 0;
-        s2.materialIndex     = 1;
-        s3.materialIndex     = 2;
-
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat1));
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat2));
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat3));
-        m_ActiveScene->hittables.push_back(std::make_shared<Sphere>(s1));
-        m_ActiveScene->hittables.push_back(std::make_shared<Sphere>(s2));
-        Primitive primitive;
-        primitive[0].position = {-10.0f, 0.0f, -1.0f};
-        primitive[1].position = {0.0f, 10.0f, -1.0f};
-        primitive[2].position = {10.0f, 0.0f, -1.0f};
-
-        Triangle tri1(primitive);
-        tri1.materialIndex = 2;
-        m_ActiveScene->hittables.push_back(std::make_shared<Triangle>(tri1));
-    }
+    RayTracer::RayTracer() {}
 
     RayTracer::RayTracer(const std::shared_ptr<Scene> scene) : m_Scene(scene)
     {
-        m_ActiveScene = std::make_shared<Scene>();
-
-        Sphere   s1{{0.0f, 1.0f, 0.0f}, 1.0f};
-        Sphere   s2{{0.0f, -100.0f, 0.0f}, 100.0f};
-        Sphere   s3{{0.0f, 0.0f, -10.0f}, 5.0f};
-        Material mat1        = {{1, .3, .4}, 1.0};
-        Material mat2        = {{1., .8, 1.}, 1.0};
-        Material mat3        = {{0.8, .1, .4}, .9};
-        mat3.m_Emission      = mat3.m_Albedo;
-        mat3.m_EmissionPower = 16;
-        s1.materialIndex     = 0;
-        s2.materialIndex     = 1;
-        s3.materialIndex     = 2;
-
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat1));
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat2));
-        m_ActiveScene->materials.push_back(std::make_shared<Material>(mat3));
-        m_ActiveScene->hittables.push_back(std::make_shared<Sphere>(s1));
-        m_ActiveScene->hittables.push_back(std::make_shared<Sphere>(s2));
-        Primitive primitive;
-        primitive[0].position = {-10.0f, 0.0f, -1.0f};
-        primitive[1].position = {0.0f, 10.0f, -1.0f};
-        primitive[2].position = {10.0f, 0.0f, -1.0f};
-
-        Triangle tri1(primitive);
-        tri1.materialIndex = 2;
-        m_ActiveScene->hittables.push_back(std::make_shared<Triangle>(tri1));
-
-        // SetupScene();
+        SetupScene();
     }
 
     RayTracer::~RayTracer() {}

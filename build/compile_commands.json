@@ -56,6 +56,11 @@
 },
 {
   "directory": "E:/Graphics/Toy/SoftRenderer/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/glm/include\" -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem D:/vcpkg/installed/x64-windows/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -std=gnu++20 -o CMakeFiles\\Walnut.dir\\Walnut\\src\\Walnut\\Logger.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Walnut\\src\\Walnut\\Logger.cpp",
+  "file": "E:/Graphics/Toy/SoftRenderer/Walnut/src/Walnut/Logger.cpp"
+},
+{
+  "directory": "E:/Graphics/Toy/SoftRenderer/build",
   "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/stb -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/glm/include\" -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem D:/vcpkg/installed/x64-windows/include -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -std=gnu++20 -o CMakeFiles\\Walnut.dir\\Walnut\\src\\Walnut\\Random.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Walnut\\src\\Walnut\\Random.cpp",
   "file": "E:/Graphics/Toy/SoftRenderer/Walnut/src/Walnut/Random.cpp"
 },
