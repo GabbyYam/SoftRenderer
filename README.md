@@ -10,8 +10,8 @@
 
 ### Raytracing
 
-- Whitted Raytracing
-- Basic Path Tracing
+- Path Tracing
+- Cook-Torrance BRDF
 
 ## Geometry
 
@@ -37,7 +37,6 @@
 
 - BDPT
 - Disney BSDF
-- Cook-Torrance BRDF
 - ClearcoatedConductor
 
 ## Gallery
