@@ -42,4 +42,4 @@
 
 ## Gallery
 
-![2023-06-10 23'33'16](Assets/CornellBox.png)
+![2023-06-10 23'33'16](Assets/cornellbox.png)
