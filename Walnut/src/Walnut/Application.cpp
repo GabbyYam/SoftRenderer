@@ -5,8 +5,10 @@
 //
 
 #include "Walnut/Application.h"
+#include "Walnut/Input/Input.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_vulkan.h"
+#include "imgui.h"
 #include <spdlog/spdlog.h>
 #include <stdio.h>   // printf, fprintf
 #include <stdlib.h>  // abort
@@ -600,6 +602,9 @@ namespace Walnut {
             // pass all inputs to dear imgui, and hide them from your
             // application based on those two flags.
             glfwPollEvents();
+
+            if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+                m_Running = false;
 
             for (auto& layer : m_LayerStack)
                 layer->OnUpdate(m_TimeStep);

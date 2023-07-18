@@ -4,8 +4,10 @@
 #include "Walnut/Logger.hpp"
 #include "Walnut/Random.h"
 #include "imgui_internal.h"
+#include <cmath>
 #include <embree3/rtcore_ray.h>
 #include <glm/detail/qualifier.hpp>
+#include <glm/exponential.hpp>
 #include <glm/fwd.hpp>
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
@@ -15,9 +17,9 @@
 
 namespace soft {
 
-    static constexpr float    PI           = 3.14159265359;
-    static constexpr float    bias         = 0.001f;
-    static constexpr uint32_t SAMPLE_COUNT = 1024u * 8;
+    static constexpr float    PI            = 3.14159265359;
+    static constexpr float    bias          = 0.001f;
+    static constexpr uint32_t s_SampleCount = 1024u * 8;
 
     struct SampleRay
     {
@@ -40,21 +42,18 @@ namespace soft {
             return m_Emission * m_EmissionPower;
         }
 
-        virtual Ray Scatter(const Ray& ray, const HitPayload& payload)
+        // virtual Ray Scatter(const Ray& ray, const HitPayload& payload)
+        // {
+        //     return Ray(ray.At(payload.rtcHit.hitDistance) + payload.rtcHit.normal * 0.0001f,
+        //                glm::reflect(ray.d, payload.rtcHit.normal + Walnut::Random::Vec3(-0.5, 0.5)));
+        // }
+
+        virtual SampleRay Sample(const Ray& ray, const HitPayload& payload)
         {
-            return Ray(ray.At(payload.hitDistance) + payload.normal * 0.0001f,
-                       glm::reflect(ray.d, payload.normal + Walnut::Random::Vec3(-0.5, 0.5)));
+            return CosineWeightedSampleHemiSphere(payload, ray);
         }
 
-        virtual SampleRay Sample(const Ray& ray, const RTCRayHit& payload)
-        {
-            vec3      normal = normalize(vec3(payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z));
-            SampleRay sample = UniformSampleHemiSphere(payload, ray);
-
-            return sample;
-        }
-
-        virtual vec3 EvaluateBRDF(const RTCRayHit& payload, const vec3& wi, const vec3& wo)
+        virtual vec3 EvaluateBRDF(const HitPayload& payload, const vec3& wi, const vec3& wo)
         {
             return m_Albedo / (2.0f * PI);
         }
@@ -64,15 +63,12 @@ namespace soft {
             // Make vector q that is non-parallel to n
             vec3 q  = N;
             vec3 aq = abs(q);
-            if (aq.x <= aq.y && aq.x <= aq.z) {
+            if (aq.x <= aq.y && aq.x <= aq.z)
                 q.x = 1.f;
-            }
-            else if (aq.y <= aq.x && aq.y <= aq.z) {
+            else if (aq.y <= aq.x && aq.y <= aq.z)
                 q.y = 1.f;
-            }
-            else {
+            else
                 q.z = 1.f;
-            }
 
             // Generate two vectors perpendicular to n
             vec3 T = normalize(cross(q, N));
@@ -100,32 +96,50 @@ namespace soft {
             return vec2(float(i) / float(N), RadicalInverse_VdC(i));
         }
 
-        // vec3 SampleHemiSphere(vec3 N)
-        // {
-        //     vec2 Xi = Hammersley(Walnut::Random::Float() * SAMPLE_COUNT, SAMPLE_COUNT);
-
-        //     float r     = sqrt(Xi.x);
-        //     float theta = 2.0 * PI * Xi.y;
-
-        //     vec3 H{r * cos(theta), r * sin(theta), sqrt(clamp(1.0f - Xi.x, 0.0f, 1.0f))};
-        //     vec3 sampleVec = TBN(N) * H;
-        //     return normalize(sampleVec);
-        // }
-
-        SampleRay UniformSampleHemiSphere(RTCRayHit const& payload, Ray const& ray)
+        // Cosine-weighted Sample
+        SampleRay CosineWeightedSampleHemiSphere(HitPayload const& payload, Ray const& ray)
         {
-            vec3 N = normalize(vec3(payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z));
+            // vec3 N = normalize(vec3(payload.rtcHit.hit.Ng_x, payload.rtcHit.hit.Ng_y, payload.rtcHit.hit.Ng_z));
+            vec3 N = payload.normal;
 
-            vec2 Xi = Hammersley(Walnut::Random::Float() * SAMPLE_COUNT, SAMPLE_COUNT);
+            // vec2 Xi = Hammersley(Walnut::Random::Float() * s_SampleCount, s_SampleCount);
+            vec2 Xi = vec2(Walnut::Random::Float(), Walnut::Random::Float());
 
             float r     = sqrt(Xi.x);
-            float theta = 2.0 * PI * Xi.y;
+            float theta = 2.0f * PI * Xi.y;
 
             vec3 H{r * cos(theta), r * sin(theta), sqrt(clamp(1.0f - Xi.x, 0.0f, 1.0f))};
-            vec3 sampleVec = TBN(N) * H;
+            vec3 sampleVec = normalize(TBN(N) * H);
 
-            vec3  p     = ray.At(payload.ray.tfar) + N * bias;
-            float NdotL = max(0.0f, dot(N, -ray.d));
+            vec3  p     = ray.At(payload.rtcHit.ray.tfar) + N * bias;
+            float NdotL = max(0.0f, dot(N, sampleVec));
+            float pdf   = NdotL / (2.0f * PI);
+
+            return SampleRay{.ray = {p, sampleVec}, .pdf = pdf};
+        }
+
+        // Uniform Sample
+        SampleRay UniformSampleHemiSphere(HitPayload const& payload, Ray const& ray)
+        {
+            // vec3 N = normalize(vec3(payload.rtcHit.hit.Ng_x, payload.rtcHit.hit.Ng_y, payload.rtcHit.hit.Ng_z));
+            vec3 N = payload.normal;
+
+            vec3 V  = normalize(-ray.d);
+            vec2 Xi = Hammersley(Walnut::Random::Float() * s_SampleCount, s_SampleCount);
+            // vec2 Xi = vec2(Walnut::Random::Float(), Walnut::Random::Float());
+
+            float theta = acos(Xi.x);
+            float phi   = 2.0 * PI * Xi.y;
+
+            vec3 H;
+            H.x            = sin(theta) * cos(phi);
+            H.y            = sin(theta) * sin(phi);
+            H.z            = cos(theta);
+            vec3 sampleVec = normalize(TBN(N) * H);
+
+            vec3  p     = ray.At(payload.rtcHit.ray.tfar) + N * bias;
+            float NdotL = max(0.0f, dot(N, sampleVec));
+            float NdotV = max(0.0f, dot(N, V));
             float pdf   = NdotL / (2.0f * PI);
 
             return SampleRay{.ray = {p, sampleVec}, .pdf = pdf};
@@ -154,25 +168,17 @@ namespace soft {
         {
         }
 
-        virtual SampleRay Sample(const Ray& ray, const RTCRayHit& payload) override
+        virtual SampleRay Sample(const Ray& ray, const HitPayload& payload) override
         {
-            vec3 N      = normalize(vec3(payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z));
-            vec2 Xi     = Hammersley(SAMPLE_COUNT * Walnut::Random::Float(), SAMPLE_COUNT);
-            vec3 wi     = -normalize(ray.d);
-            vec4 sample = ImportanceSampleGGX(Xi, N, m_Roughness);
-            vec3 H      = sample;
-
-            float pdf   = DistributionGGX(N, H, m_Roughness) * dot(N, H);
-            vec3  wo    = normalize(reflect(-wi, H));
-            float NdotL = max(0.0f, dot(wi, N));
-
-            // return SampleRay{.ray = {ray.At(payload.ray.tfar) + N * 0.001f, wo}, .pdf = NdotL};
-            return UniformSampleHemiSphere(payload, ray);
+            // return ImportanceSampleGGX(payload, ray);
+            return CosineWeightedSampleHemiSphere(payload, ray);
+            // return UniformSampleHemiSphere(payload, ray);
         }
 
-        virtual vec3 EvaluateBRDF(const RTCRayHit& payload, const vec3& wi, const vec3& wo) override
+        virtual vec3 EvaluateBRDF(const HitPayload& payload, const vec3& wi, const vec3& wo) override
         {
-            vec3  N     = normalize(vec3(payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z));
+            // vec3  N     = normalize(vec3(payload.rtcHit.hit.Ng_x, payload.rtcHit.hit.Ng_y, payload.rtcHit.hit.Ng_z));
+            vec3  N     = payload.normal;
             vec3  L     = normalize(wi);
             vec3  V     = normalize(wo);
             vec3  H     = normalize(L + V);
@@ -204,43 +210,11 @@ namespace soft {
             return brdf;
         }
 
-        vec2 IntegrateBRDF(float NdotV, float roughness)
-        {
-            vec3 V;
-            V.x = sqrt(1.0 - NdotV * NdotV);  // sin(Theta)
-            V.y = 0.0;
-            V.z = NdotV;  // cos(Theta)
-
-            float A = 0.0;
-            float B = 0.0;
-
-            vec3 N = vec3(0.0, 0.0, 1.0);
-
-            // generates a sample vector that's biased towards the
-            // preferred alignment direction (importance sampling).
-            vec2 Xi = Hammersley(Walnut::Random::Float() * SAMPLE_COUNT, SAMPLE_COUNT);
-            vec3 H  = ImportanceSampleGGX(Xi, N, roughness);  // Wo
-            vec3 L  = normalize(2.0f * dot(V, H) * H - V);
-
-            float NdotL = max(L.z, 0.0f);
-            float NdotH = max(H.z, 0.0f);
-            float VdotH = max(dot(V, H), 0.0f);
-
-            float G     = GeometrySmith(N, V, L, roughness);
-            float G_Vis = (G * VdotH) / (NdotH * NdotV);
-            float Fc    = pow(1.0 - VdotH, 5.0);
-            // float GWf   = (VdotH * L.z) / NdotH;
-
-            A = (1.0 - Fc) * G_Vis;
-            B = Fc * G_Vis;
-            return vec2(A, B);
-        }
-
         float DistributionGGX(vec3 N, vec3 H, float roughness)
         {
             float a      = roughness * roughness;
             float a2     = a * a;
-            float NdotH  = dot(N, H);
+            float NdotH  = max(0.0f, dot(N, H));
             float NdotH2 = NdotH * NdotH;
 
             float nom   = a2;
@@ -281,34 +255,43 @@ namespace soft {
             return F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - cosTheta, 5.0f);
         }
 
-        vec4 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness)
+        SampleRay ImportanceSampleGGX(HitPayload const& payload, Ray const& ray)
         {
-            float a  = roughness * roughness;
-            float a2 = a * a;
+            vec2 Xi = Hammersley(Walnut::Random::Float() * s_SampleCount, s_SampleCount);
+            vec3 N  = payload.normal;
 
-            float phi      = 2.0 * PI * Xi.x;
-            float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a2 - 1.0) * Xi.y));
-            float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+            vec3 p = ray.At(payload.rtcHit.ray.tfar) + N * bias;
 
-            // from spherical coordinates to cartesian coordinates - halfway vector
+            Xi = vec2(Walnut::Random::Float(), Walnut::Random::Float());
+
+            float a     = m_Roughness * m_Roughness;
+            float a2    = a * a;
+            float theta = std::acos(std::sqrt((1.0f - Xi.x) / (1.0f + (a2 - 1.0f) * Xi.x)));
+            float phi   = 2.0f * PI * Xi.y;
+
             vec3 H;
-            H.x = cos(phi) * sinTheta;
-            H.y = sin(phi) * sinTheta;
-            H.z = cosTheta;
+            H.x = cos(phi) * sin(theta);
+            H.y = sin(phi) * sin(theta);
+            H.z = cos(theta);
 
-            // float d   = (cosTheta * a2 - cosTheta) * cosTheta + 1;
-            // float D   = a2 / (PI * d * d);
-            // float pdf = D * cosTheta;
+            // To World-space
+            H = normalize(TBN(N) * H);
 
-            // from tangent-space H vector to world-space sample vector
-            vec3 up        = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
-            vec3 tangent   = normalize(cross(up, N));
-            vec3 bitangent = normalize(cross(N, tangent));
+            float nominator   = 2.0f * a2 * cos(theta) * sin(theta);
+            float denominator = (a2 - 1) * cos(theta) * cos(theta) + 1.0f;
+            denominator       = denominator * denominator;
 
-            mat3 TBN{tangent, bitangent, N};
+            vec3 V = normalize(-ray.d);
+            vec3 L = normalize(reflect(ray.d, H));
 
-            vec3 sampleVec = normalize(TBN * H);
-            return vec4(sampleVec, 1.0);
+            float NdotL = max(L.z, 0.0f);
+            float NdotH = max(H.z, 0.0f);
+            float VdotH = dot(V, H);
+            float NdotV = max(dot(N, V), 0.0f);
+
+            float pdf = (nominator / denominator) / (4.0f * VdotH);
+
+            return SampleRay{.ray = {p, L}, .pdf = pdf};
         }
 
     public:

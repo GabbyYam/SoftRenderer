@@ -55,13 +55,13 @@ namespace soft {
         // c.y = !std::isnan(c.y) ? c.y : 0.0f;
         // c.z = !std::isnan(c.z) ? c.z : 0.0f;
 
-        if (postProcessingSetting.ToneMapping)
+        if (postProcessingSetting.ToneMapping) {
             c = ACES_ToneMapping(c);
+            // c = ToSRGB(c);
+        }
 
         if (postProcessingSetting.Gamma)
             c = utils::GammaCorrection(c);
-
-        c = glm::clamp(c, 0.0f, 1.0f);
 
         m_ImageData[x + y * m_FramebufferImage->GetWidth()] = vec4(c, 1.0);
     }

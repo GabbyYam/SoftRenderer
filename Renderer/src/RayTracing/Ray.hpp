@@ -1,8 +1,10 @@
 #pragma once
 
+#include <embree3/rtcore_ray.h>
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <limits>
+#include <memory>
 #include <stdint.h>
 using namespace glm;
 namespace soft {
@@ -25,11 +27,9 @@ namespace soft {
 
     struct HitPayload
     {
-        vec3  position{0.0f};
-        vec3  normal{0.0f};
-        float u = 0.f, v = 0.f;
-        float hitDistance = std::numeric_limits<float>::max();
-        int   objectIndex = -1;
+        RTCRayHit rtcHit;
+        vec3      position{0.0f};
+        vec3      normal{0.0f};
+        float     hitDistance = 0.0f;
     };
-
 }  // namespace soft

@@ -12,19 +12,19 @@
 
 - Path Tracing
 - Cook-Torrance BRDF
+- Importance Sampling
 
 ## Geometry
 
 - Triangle Mesh
 - Sphere
-- Quad
 
 ## Acceleration
 
 - Multi-Threading
-  - std::execution::par
-  - TBB parallel for
-  - OMP for
+  - STL execution
+  - TBB 
+  - OMP
 
 - BVH
 
@@ -35,10 +35,13 @@
 
 ## TODO
 
+- MIS
 - BDPT
 - Disney BSDF
 - ClearcoatedConductor
 
 ## Gallery
 
-![2023-06-10 23'33'16](Assets/cornellbox.png)
+![2023-06-10 23'33'16](Assets/cornellbox_white.png)
+
+![2023-06-10 23'33'16](Assets/smooth.png)

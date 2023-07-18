@@ -4,11 +4,11 @@
 namespace soft {
     class Toon : public Material {
     public:
-        virtual Ray Scatter(const Ray& ray, const HitPayload& payload)
-        {
-            return Ray(ray.At(payload.hitDistance) + payload.normal * 0.0001f,
-                       glm::reflect(ray.d, payload.normal + Walnut::Random::Vec3(-0.5, 0.5)));
-        }
+        // virtual Ray Scatter(const Ray& ray, const HitPayload& payload)
+        // {
+        //     return Ray(ray.At(payload.hitDistance) + payload.normal * 0.0001f,
+        //                glm::reflect(ray.d, payload.normal + Walnut::Random::Vec3(-0.5, 0.5)));
+        // }
 
         virtual Ray Scatter(const Ray& ray, const RTCRayHit& payload)
         {

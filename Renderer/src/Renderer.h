@@ -18,6 +18,7 @@
 #include <stb_image.h>
 #include <string_view>
 #include <vector>
+#include <GLFW/glfw3.h>
 
 #include "Config/Config.hpp"
 
@@ -87,9 +88,20 @@ namespace soft {
             return ((x * (a * x + b)) / (x * (c * x + d) + e));
         }
 
+        virtual vec3 ToSRGB(vec3 color)
+        {
+            return vec3(ToSRGBv(color.x), ToSRGBv(color.y), ToSRGBv(color.z));
+        }
+
+        float ToSRGBv(float x)
+        {
+            return (x <= 0.0031308 ? x * 12.92 : 1.055 * pow(x, 0.4166667) - 0.055);
+        }
+
         void ResetFrameIndex()
         {
             m_FrameIndex = 1;
+            // glfwSetTime(0);
         }
 
         auto TotalFrameCount()

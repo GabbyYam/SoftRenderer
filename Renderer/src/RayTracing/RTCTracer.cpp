@@ -9,6 +9,7 @@
 #include "Texture/Texture2D.hpp"
 #include "Walnut/Logger.hpp"
 #include "Walnut/Random.h"
+#include "imgui_internal.h"
 #include "tbb/parallel_for.h"
 #include <assimp/texture.h>
 #include <cstddef>
@@ -36,6 +37,21 @@
 #include <vcruntime.h>
 #include <vcruntime_string.h>
 #include <vector>
+
+namespace utils {
+    void RepeatUV(vec2& uv)
+    {
+        if (uv.x > 1.0f)
+            uv.x -= 1.0f;
+        if (uv.y > 1.0f)
+            uv.y -= 1.0f;
+
+        if (uv.x < 0.0f)
+            uv.x += 1.0f;
+        if (uv.y < 0.0f)
+            uv.y += 1.0f;
+    }
+}  // namespace utils
 
 namespace soft {
 
@@ -175,54 +191,54 @@ namespace soft {
         vec3 Lo(0.0f);
         vec3 contribution(1.0f);
 
-        vec3 r = Walnut::Random::Vec3() * 0.001f;
-        Ray  ray(m_ActiveCamera->GetPosition(), m_ActiveCamera->GetRayDirection(x, y) + r);
-
+        vec3  r = Walnut::Random::Vec3() * 0.001f;
+        Ray   ray(m_ActiveCamera->GetPosition(), normalize(m_ActiveCamera->GetRayDirection(x, y) + r));
         float prob           = rayTraceSetting.prob;
         float probMultiplier = 1.0 / prob;
         float NdotL          = 0.0f;
-
-        int bounce = 1;
+        int   bounce         = 1;
 
         while (true) {
             // Intersect with scene
-            auto payload = TraceRay(ray);
+            HitPayload payload{.rtcHit = TraceRay(ray)};
 
-            if (payload.hit.geomID == RTC_INVALID_GEOMETRY_ID) {
+            if (payload.rtcHit.hit.geomID == RTC_INVALID_GEOMETRY_ID) {
                 if (lightSetting.useEnvironmentMap) {
                     vec3 Li = m_EnvironmentMap ? m_EnvironmentMap->SampleCube(ray.d) : vec3{0.6, 0.7, 0.9};
+                    Li *= lightSetting.lightIntensity;
                     Lo += Li * contribution;
                 }
                 break;
             }
 
             // Cull Back Face
-            vec3 N  = normalize(vec3{payload.hit.Ng_x, payload.hit.Ng_y, payload.hit.Ng_z});
-            vec3 wi = -ray.d;
-            if (dot(N, wi) < 0.0f)
-                break;
+
+            vec3 N = normalize(vec3{payload.rtcHit.hit.Ng_x, payload.rtcHit.hit.Ng_y, payload.rtcHit.hit.Ng_z});
+            vec3 V = normalize(-ray.d);
 
             // Interpolate primitive
-            auto geometry = m_ActiveScene->geometries[payload.hit.geomID];
+
+            auto geometry = m_ActiveScene->geometries[payload.rtcHit.hit.geomID];
             if (!geometry->primitives.empty()) {
                 // Barycentric Coordinate
-                auto primitive = *geometry->primitives[payload.hit.primID];
-                auto coord     = Barycentric(primitive, ray.At(payload.ray.tfar));
+                auto primitive = *geometry->primitives[payload.rtcHit.hit.primID];
+                auto coord     = Barycentric(primitive, ray.At(payload.rtcHit.ray.tfar));
 
                 // Normal
                 N = primitive[0].normal * coord.x + primitive[1].normal * coord.y + primitive[2].normal * coord.z;
 
                 // Sample texture
-                if (m_ActiveScene->textureIndex[payload.hit.geomID] >= 0) {
-                    auto diffuseMap = m_ActiveScene->textures[m_ActiveScene->textureIndex[payload.hit.geomID]];
+                if (m_ActiveScene->textureIndex[payload.rtcHit.hit.geomID] >= 0) {
+                    auto diffuseMap = m_ActiveScene->textures[m_ActiveScene->textureIndex[payload.rtcHit.hit.geomID]];
 
                     auto uv = primitive[0].texCoord * coord.x + primitive[1].texCoord * coord.y + primitive[2].texCoord * coord.z;
-                    uv      = clamp(uv, 0.0f, 1.0f);
+                    utils::RepeatUV(uv);
+
                     contribution *= diffuseMap->Sample2D(uv);
                 }
             }
 
-            auto material = m_ActiveScene->materials[m_ActiveScene->materialIndex[payload.hit.geomID]];
+            auto material = m_ActiveScene->materials[m_ActiveScene->materialIndex[payload.rtcHit.hit.geomID]];
 
             if (bounce++ == 1)
                 Lo += material->Emission();
@@ -230,41 +246,55 @@ namespace soft {
             // Direct Light
             if (rayTraceSetting.sampleFromLight) {
                 // Sample random point from light source
-                vec3  lightPosition{-0.25 + 0.5 * Walnut::Random::Float(), 1, -0.25 + 0.5 * Walnut::Random::Float()};
-                vec3  p        = ray.At(payload.ray.tfar);
-                vec3  lightToP = p - lightPosition;
-                float distance = glm::length(lightToP);
-                lightToP /= distance;
-                auto targetPayload = TraceRay(Ray(p + N * bias, -lightToP));
+                vec3 lightPosition{-0.25 + 0.5 * Walnut::Random::Float(), 1 - bias, -0.25 + 0.5 * Walnut::Random::Float()};
+                vec3 p       = ray.At(payload.rtcHit.ray.tfar);
+                vec3 toLight = lightPosition - p;
 
-                if (targetPayload.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
-                    auto targetMaterial = m_ActiveScene->materials[m_ActiveScene->materialIndex[targetPayload.hit.geomID]];
+                float distance = glm::length(toLight);
+                toLight        = normalize(toLight);
+
+                Ray  sampleRay = Ray(p + N * bias, toLight);
+                auto srtcHit   = TraceRay(sampleRay);
+
+                if (srtcHit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
+                    auto       targetMaterial = m_ActiveScene->materials[m_ActiveScene->materialIndex[srtcHit.hit.geomID]];
+                    auto       targetNormal   = normalize(vec3(srtcHit.hit.Ng_x, srtcHit.hit.Ng_y, srtcHit.hit.Ng_z));
+                    HitPayload targetPayload;
+                    targetPayload.normal   = targetNormal;
+                    targetPayload.position = sampleRay.At(srtcHit.ray.tfar);
+
                     if (targetMaterial->IsLightSource()) {
-                        NdotL     = max(0.0f, dot(-lightToP, N));
+                        float cosTheta  = max(0.0f, dot(N, toLight));
+                        float cosTheta_ = max(0.0f, dot(targetNormal, -toLight));
+
                         vec3 Li   = targetMaterial->Emission();
-                        vec3 brdf = material->EvaluateBRDF(payload, wi, -lightToP);
+                        vec3 brdf = material->EvaluateBRDF(targetPayload, toLight, V);
 
                         float lightArea = 0.5f * 0.5f;
                         float pdf       = 1.0 / lightArea;
 
-                        float attenuation   = min(1.0f, 1.0f / (distance * distance));
-                        vec3  contributionD = (brdf / pdf) * NdotL;
+                        float attenuation   = 1.0f / (distance * distance);
+                        vec3  contributionD = (brdf / pdf) * cosTheta * cosTheta_;
 
-                        Lo += Li * contributionD * contribution * attenuation;
+                        Lo += Li * contributionD * contribution * attenuation * probMultiplier;
                     }
                 }
             }
 
             // Russian Roulette or Hit Light
-            if (Walnut::Random::Float() > prob || material->IsLightSource())
+            if ((Walnut::Random::Float() > prob) || material->IsLightSource())
                 break;
 
             // Calculate Indirect Light
-            auto  sampleRay = material->Sample(ray, payload);
-            vec3  brdf      = material->EvaluateBRDF(payload, -ray.d, sampleRay.ray.d);
-            float pdf       = sampleRay.pdf;
+            payload.normal = N;
 
-            NdotL = max(0.0f, dot(wi, N));
+            auto sampleRay = material->Sample(ray, payload);
+            vec3 L         = normalize(sampleRay.ray.d);
+
+            vec3  brdf = material->EvaluateBRDF(payload, L, V);
+            float pdf  = sampleRay.pdf;
+
+            float NdotL = max(0.0f, dot(L, N));
             contribution *= (brdf / pdf) * NdotL;
 
             ray = sampleRay.ray;
@@ -279,7 +309,7 @@ namespace soft {
         Material pink       = {{1, .3, .4}};
         Material green      = {{0.1, 0.9, 0.1}};
         Material red        = {{0.9, .1, .1}};
-        // Material lightSource = {vec3(1.0), 1.0f, vec3(0.85, 0.8, 0.4), 30.0f};
+        // Material lightSource = {vec3(1.0), vec3(18.4, 15.6, 8.0), 1.0f};
         Material    lightSource  = {vec3(1.0), vec3(1.0), 16.0f};
         Material    glass        = {{.9, .9, .9}};
         Material    glossy       = {vec3{1.0f}};
@@ -300,13 +330,8 @@ namespace soft {
         materials[6] = std::make_shared<PBRMaterial>(metal);
         materials[7] = std::make_shared<Material>(glossy);
         materials[8] = std::make_shared<PBRMaterial>(glossySphere);
-#define BOX 1
-#ifdef Model
-        for (auto& model : m_ActiveScene->models) {
-            // int randomIndex = Walnut::Random::UInt() % m_ActiveScene->materials.size();
-            AddModel(model, 0);
-        }
-#elif BOX
+
+        // AddModel(const std::shared_ptr<Model> model, int materialIndex)
 
         auto cube = std::vector<Quad>{
             {{-1, -1, 1}, {-1, -1, -1}, {-1, 1, 1}, {-1, 1, -1}}, {{1, -1, 1}, {1, 1, 1}, {1, -1, -1}, {1, 1, -1}},
@@ -318,21 +343,25 @@ namespace soft {
         // AddQuad(cube[0], 3);
         // AddQuad(cube[1], 2);
         // AddQuad(cube[2], 0);
-        AddQuad(cube[3], 0);
         // AddQuad(cube[4], 0);
+        AddQuad(cube[3], 0);  // Bottom
+        // for (auto& model : m_ActiveScene->models) {
+        //     // int randomIndex = Walnut::Random::UInt() % m_ActiveScene->materials.size();
+        //     AddModel(model, 6);
+        // }
         AddSphere(vec3{0.0, 0.0f, 0.0f}, 0.4f, 8);
 
         // Lamp
         float bias = 0.0001f;
         AddQuad({{0.25, 1.0 - bias, -0.25}, {0.25, 1.0 - bias, 0.25}, {-0.25, 1.0 - bias, -0.25}, {-0.25, 1.0 - bias, 0.25}}, 4);
 
-        // // Object
+        // Object
         // auto translate = glm::translate(mat4(1.0), vec3(-0.35, -0.4, -0.3));
         // auto rotate    = glm::rotate(mat4(1.0), glm::radians(15.0f), vec3(0, 1, 0));
         // auto scale     = glm::scale(mat4(1.0), vec3(0.3, 0.6, 0.3));
         // for (auto quad : cube) {
         //     quad.SetTransform(translate * rotate * scale);
-        //     AddQuad(quad, 0, true);
+        //     AddQuad(quad, 8, true);
         // }
 
         // translate = glm::translate(mat4(1.0), vec3(0.35, -0.7, 0.3));
@@ -340,10 +369,8 @@ namespace soft {
         // scale     = glm::scale(mat4(1.0), vec3(0.3, 0.3, 0.3));
         // for (auto quad : cube) {
         //     quad.SetTransform(translate * rotate * scale);
-        //     AddQuad(quad, 0, true);
+        //     AddQuad(quad, 8, true);
         // }
-
-#endif
     }
 
     void RTCTracer::AddModel(const std::shared_ptr<Model> model, int materialIndex)
@@ -360,12 +387,15 @@ namespace soft {
 
             // World Space Transform
 #pragma region Rotate
-            auto translate   = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-            auto rotateX     = glm::rotate(glm::mat4(1.0f), glm::radians(-90.f), glm::vec3(1.0f, 0.0f, 0.0f));
-            auto modelMatrix = translate * rotateX;
+            auto translate   = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.5f, 0.0f));
+            auto rotate      = glm::rotate(glm::mat4(1.0f), glm::radians(-90.f), glm::vec3(1.0f, 0.0f, 0.0f));
+            auto scale       = glm::scale(glm::mat4(1.00f), vec3(2.0));
+            auto modelMatrix = translate * scale;
 
-            for (auto& vert : mesh.vertices)
+            for (auto& vert : mesh.vertices) {
                 vert.position = modelMatrix * vec4(vert.position, 1.0f);
+                vert.normal   = transpose(inverse(mat3(modelMatrix))) * vert.normal;
+            }
 #pragma endregion
 
             for (int i = 0; i < mesh.vertices.size(); i++)
@@ -384,8 +414,13 @@ namespace soft {
 
             // Bind material and texture in order
             m_ActiveScene->materialIndex.push_back(materialIndex);
-            m_ActiveScene->textureIndex.push_back(m_ActiveScene->textures.size());
-            m_ActiveScene->textures.push_back(std::make_shared<Texture2D>(mesh.textures.front()));
+            if (mesh.textures.size()) {
+                m_ActiveScene->textureIndex.push_back(m_ActiveScene->textures.size());
+                m_ActiveScene->textures.push_back(std::make_shared<Texture2D>(mesh.textures.front()));
+            }
+            else {
+                m_ActiveScene->textureIndex.push_back(-1);
+            }
 
             auto& geometry = m_ActiveScene->geometries.emplace_back(std::make_shared<Geometry>());
             // Save primitive for lookup texture coord

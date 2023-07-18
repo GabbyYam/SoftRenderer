@@ -23,6 +23,7 @@ namespace soft {
         virtual void Render(const std::shared_ptr<Camera> camera) override;
         RTCRayHit    TraceRay(const Ray& ray);
         vec3         PerPixel(uint32_t x, uint32_t y);
+        // vec3         Shade(RTCRayHit const& payload, vec3 V);
 
     private:
         void Initialize();

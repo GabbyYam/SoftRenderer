@@ -1,5 +1,6 @@
 
 #include "FileDialogs.hpp"
+#include "GLFW/glfw3.h"
 #include "Geometry/Model.hpp"
 #include "Geometry/Scene.hpp"
 #include "RayTracing/RTCTracer.hpp"
@@ -25,17 +26,18 @@
 #include <stb_image_write.h>
 #include <OpenImageDenoise/oidn.hpp>
 
-static const std::string s_MeshFilename    = "H:/GameDev Asset/Models/Vroid_JK_Fix.fbx";
-static const std::string s_ObjMeshFilename = "E:/Data/room/face.obj";
-static const std::string s_Bunny           = "H:/Meshes/Bunny.obj";
-static const std::string s_EnvMap          = "H:/GameDev Asset/Textures/EnvironmentMap/newport_loft.hdr";
+static const std::string s_MeshFilename       = "H:/GameDev Asset/Models/Vroid_JK_Fix.fbx";
+static const std::string s_MonkeyMeshFilename = "../Assets/Models/Monkey.obj";
+static const std::string s_ObjMeshFilename    = "E:/Data/room/face.obj";
+static const std::string s_Bunny              = "H:/Meshes/Bunny.obj";
+static const std::string s_EnvMap             = "H:/GameDev Asset/Textures/EnvironmentMap/newport_loft.hdr";
 
 class SoftEditorLayer : public Walnut::Layer {
 public:
     SoftEditorLayer()
     {
         spdlog::set_level(spdlog::level::debug);
-        std::shared_ptr<soft::Model> model = std::make_shared<soft::Model>(s_MeshFilename);
+        std::shared_ptr<soft::Model> model = std::make_shared<soft::Model>(s_Bunny);
         std::shared_ptr<soft::Scene> scene = std::make_shared<soft::Scene>();
         scene->models.push_back(model);
 
@@ -59,8 +61,10 @@ public:
         if (m_Running)
             m_ConfigChange |= m_Camera->OnUpdate(ts);
 
-        if (m_ConfigChange)
+        if (m_ConfigChange) {
             m_RayTracer->ResetFrameIndex();
+            m_LastResetTime = glfwGetTime();
+        }
     }
 
     virtual void OnUIRender() override
@@ -129,7 +133,9 @@ public:
 
             ImGui::Text("Frame rate: %.3f fps", 1000.f / m_LastTime);
             ImGui::Text("Frame cost: %.3f ms", m_LastTime);
-            ImGui::Text("Frame count: %d", m_ActiveRenderer->TotalFrameCount());
+            ImGui::Text("Total frames: %d", m_ActiveRenderer->TotalFrameCount());
+            ImGui::Text("Total time: %.3f s", (float)glfwGetTime() - m_LastResetTime);
+
             // ImGui::Text("Camera Position: %.3f %.3f %.3f", m_Camera->GetPosition().x, m_Camera->GetPosition().y,
             //             m_Camera->GetPosition().z);
             ImGui::End();
@@ -339,7 +345,8 @@ public:
 
 private:
     uint32_t                          m_ViewportWidth, m_ViewportHeight;
-    float                             m_LastTime = 1.0f;
+    float                             m_LastTime      = 1.0f;
+    float                             m_LastResetTime = 0.0f;
     std::shared_ptr<soft::Renderer>   m_ActiveRenderer;
     std::shared_ptr<soft::Rasterizer> m_Rasterizer;
     std::shared_ptr<soft::Renderer>   m_RayTracer;
