@@ -6,4 +6,5 @@
 namespace utils {
 
     void debugColor(const glm::vec3& color);
+    void PrintVector(const glm::vec3& v);
 }  // namespace utils

@@ -1,8 +1,8 @@
 # ninja log v5
 41	3161	7112563141983695	CMakeFiles/Walnut.dir/Walnut/src/Walnut/Application.cpp.obj	3c0268de1df6de8d
 29	83	7109440657819693	CMakeFiles/Renderer.dir/Renderer/src/Geometry/Mesh.cpp.obj	ba2122e5cae00710
-6593	6810	7113507254365986	Renderer.lib	712ce32788373a10
-38	74	7113443180871780	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj	63a360ec16210f38
+5886	6038	7119040425894041	Renderer.lib	5b2c1349f049fde3
+14	5885	7119040424216749	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj	63a360ec16210f38
 60	200	7109440658998059	CMakeFiles/Editor.dir/Editor/resources/editor.rc.res	9c328a52fc88dad0
 82	1766	7081404347390294	CMakeFiles/imgui.dir/3rdparty/imgui/backends/imgui_impl_glfw.cpp.obj	ad2aaf35d2fc8153
 89	1022	7081404340169823	CMakeFiles/imgui.dir/3rdparty/imgui/backends/imgui_impl_opengl3.cpp.obj	6bacba1cd4f1a804
@@ -15,7 +15,7 @@
 668	1840	7081404348389068	3rdparty/glfw/src/CMakeFiles/glfw.dir/init.c.obj	b4530c7eac5c624c
 1040	2102	7081404350853876	3rdparty/glfw/src/CMakeFiles/glfw.dir/monitor.c.obj	e584005d34320091
 68	2170	7081404351656284	CMakeFiles/imgui.dir/3rdparty/imgui/imgui_tables.cpp.obj	259c9ece3cbcdbd9
-3161	3287	7112563143360037	Walnut.lib	83c927c8431f3c5e
+3664	3825	7114267816581197	Walnut.lib	83c927c8431f3c5e
 1462	2275	7081404352784333	3rdparty/glfw/src/CMakeFiles/glfw.dir/platform.c.obj	dd2ada1a5a476bdc
 28	2479	7081404354710026	CMakeFiles/Walnut.dir/Walnut/src/Walnut/ImGui/ImGuiBuild.cpp.obj	b5ced46c8f378d7c
 1023	2496	7081404354880762	3rdparty/glfw/src/CMakeFiles/glfw.dir/input.c.obj	ac2cdf1a86746200
@@ -29,7 +29,7 @@
 2496	3236	7081404362294656	3rdparty/glfw/src/CMakeFiles/glfw.dir/null_joystick.c.obj	19efdb536ccf052a
 2480	3440	7081404364319699	3rdparty/glfw/src/CMakeFiles/glfw.dir/null_window.c.obj	43532c7480e1ba2d
 2741	3553	7081404365437310	3rdparty/glfw/src/CMakeFiles/glfw.dir/win32_module.c.obj	75e47a2923b0a260
-10	3281	7110675465433929	CMakeFiles/Walnut.dir/Walnut/src/Walnut/Logger.cpp.obj	d644f1efd1e1c9bd
+40	3664	7114267814870459	CMakeFiles/Walnut.dir/Walnut/src/Walnut/Logger.cpp.obj	d644f1efd1e1c9bd
 2847	3655	7081404366521209	3rdparty/glfw/src/CMakeFiles/glfw.dir/win32_time.c.obj	2ecb89447c6474fc
 2954	3708	7081404366927708	3rdparty/glfw/src/CMakeFiles/glfw.dir/win32_thread.c.obj	8a0230834ceb6553
 55	3995	7081404369975772	CMakeFiles/imgui.dir/3rdparty/imgui/imgui_demo.cpp.obj	ef05ff9e40e9fd94
@@ -39,21 +39,11 @@
 4419	4646	7081404376612230	3rdparty/glfw/src/glfw3.lib	b5780955c05dd162
 11881	12110	7081404451264543	imgui.lib	c0bf09cca1549343
 75	5172	7081404381853229	CMakeFiles/imgui.dir/3rdparty/imgui/imgui_widgets.cpp.obj	259775e1bf39752b
-55	7570	7113507261785806	CMakeFiles/Editor.dir/Editor/src/Editor.cpp.obj	5bc7d700a7303ced
+98	6319	7115321845302815	CMakeFiles/Editor.dir/Editor/src/Editor.cpp.obj	5bc7d700a7303ced
 40	5300	7109527861509778	CMakeFiles/Walnut.dir/Walnut/src/Walnut/Image.cpp.obj	b89bbc3bfdbdbd0c
-37	4512	7113507231260759	CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj	537bf9af4e3dce26
+68	3760	7115321819719969	CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj	537bf9af4e3dce26
 61	11881	7081404448927003	CMakeFiles/imgui.dir/3rdparty/imgui/imgui_draw.cpp.obj	fcc4ba761c1f850e
-25	3874	7113381330176255	CMakeFiles/Renderer.dir/Renderer/src/Renderer.cpp.obj	387b96f77e2e705e
-7570	8474	7113507263667409	Editor.exe	6786aecdfb3e01a6
-45	6593	7113507252066641	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RTCTracer.cpp.obj	1ccef7fc49490b8e
+37	4162	7114341704282526	CMakeFiles/Renderer.dir/Renderer/src/Renderer.cpp.obj	387b96f77e2e705e
+6038	8106	7119040427484105	Editor.exe	6786aecdfb3e01a6
+24	5660	7114367244278111	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RTCTracer.cpp.obj	1ccef7fc49490b8e
 20	1588	7109440672824726	CMakeFiles/Renderer.dir/Renderer/src/FileDialogs.cpp.obj	db52bbc2fbba989c
-51	4411	7113519622501222	CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj	537bf9af4e3dce26
-63	6426	7113519642657636	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RTCTracer.cpp.obj	1ccef7fc49490b8e
-6426	6583	7113519644333885	Renderer.lib	712ce32788373a10
-76	7098	7113519649361589	CMakeFiles/Editor.dir/Editor/src/Editor.cpp.obj	5bc7d700a7303ced
-7098	7907	7113519651102246	Editor.exe	6786aecdfb3e01a6
-26	3531	7113532320355259	CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj	537bf9af4e3dce26
-33	5453	7113532339591109	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RTCTracer.cpp.obj	1ccef7fc49490b8e
-5453	5613	7113532341278783	Renderer.lib	712ce32788373a10
-40	6117	7113532346198649	CMakeFiles/Editor.dir/Editor/src/Editor.cpp.obj	5bc7d700a7303ced
-6118	6911	7113532347839023	Editor.exe	6786aecdfb3e01a6

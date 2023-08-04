@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "Geometry/Model.hpp"
 #include "Geometry/Scene.hpp"
-#include "RayTracing/RTCTracer.hpp"
+#include "RayTracing/RayTracer.hpp"
 #include "Walnut/Application.h"
 #include "Walnut/EntryPoint.h"
 #include "Walnut/Image.h"
@@ -26,23 +26,24 @@
 #include <stb_image_write.h>
 #include <OpenImageDenoise/oidn.hpp>
 
-static const std::string s_MeshFilename       = "H:/GameDev Asset/Models/Vroid_JK_Fix.fbx";
-static const std::string s_MonkeyMeshFilename = "../Assets/Models/Monkey.obj";
-static const std::string s_ObjMeshFilename    = "E:/Data/room/face.obj";
-static const std::string s_Bunny              = "H:/Meshes/Bunny.obj";
-static const std::string s_EnvMap             = "H:/GameDev Asset/Textures/EnvironmentMap/newport_loft.hdr";
+static const std::string s_VroidJK = "../Assets/Models/Vroid_JK.fbx";
+static const std::string s_Monkey  = "../Assets/Models/Monkey.obj";
+static const std::string s_Bunny   = "H:/Meshes/Bunny.obj";
+static const std::string s_Test    = "../Assets/Models/testObj.obj";
+static const std::string s_Sphere  = "../Assets/Models/Sphere.obj";
+static const std::string s_EnvMap  = "H:/GameDev Asset/Textures/EnvironmentMap/newport_loft.hdr";
 
 class SoftEditorLayer : public Walnut::Layer {
 public:
     SoftEditorLayer()
     {
         spdlog::set_level(spdlog::level::debug);
-        std::shared_ptr<soft::Model> model = std::make_shared<soft::Model>(s_Bunny);
+        std::shared_ptr<soft::Model> model = std::make_shared<soft::Model>(s_Monkey);
         std::shared_ptr<soft::Scene> scene = std::make_shared<soft::Scene>();
         scene->models.push_back(model);
 
         m_Rasterizer     = std::make_shared<soft::Rasterizer>(scene);
-        m_RayTracer      = std::make_shared<soft::RTCTracer>(scene);
+        m_RayTracer      = std::make_shared<soft::RayTracer>(scene);
         m_ActiveRenderer = m_ApplyRayTracing ? m_RayTracer : m_Rasterizer;
 
         m_Rasterizer->lightSetting.environmentMapPath = s_EnvMap;

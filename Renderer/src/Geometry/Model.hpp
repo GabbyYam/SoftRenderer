@@ -38,18 +38,16 @@ namespace soft {
         {
             // read file via ASSIMP
             Assimp::Importer importer;
-            const aiScene*   scene =
-                importer.ReadFile(path.data(), aiProcess_Triangulate | aiProcess_GenSmoothNormals |
-                                                   aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+            const aiScene*   scene = importer.ReadFile(path.data(), aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+                                                                        aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
             // check for errors
-            if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
-                !scene->mRootNode)  // if is Not Zero
+            if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)  // if is Not Zero
             {
                 spdlog::error("ERROR::ASSIMP:: {}", importer.GetErrorString());
                 return;
             }
 
-            m_Directory = path.substr(0, path.find_last_of('\\'));
+            m_Directory = path.substr(0, min(path.find_last_of('\\'), path.find_last_of('/')));
             // process ASSIMP's root node recursively
             ProcessNode(scene->mRootNode, scene);
         }
@@ -148,20 +146,16 @@ namespace soft {
             // texture_specularN normal: texture_normalN
 
             // 1. diffuse maps
-            std::vector<Texture2D> diffuseMaps =
-                LoadMaterialTextures(material, aiTextureType_DIFFUSE, "Diffuse Map", scene);
+            std::vector<Texture2D> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "Diffuse Map", scene);
             textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
             // 2. specular maps
-            std::vector<Texture2D> specularMaps =
-                LoadMaterialTextures(material, aiTextureType_SPECULAR, "Specular Map", scene);
+            std::vector<Texture2D> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "Specular Map", scene);
             textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
             // 3. normal maps
-            std::vector<Texture2D> normalMaps =
-                LoadMaterialTextures(material, aiTextureType_HEIGHT, "Normal Map", scene);
+            std::vector<Texture2D> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "Normal Map", scene);
             textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
             // 4. height maps
-            std::vector<Texture2D> heightMaps =
-                LoadMaterialTextures(material, aiTextureType_AMBIENT, "Height Map", scene);
+            std::vector<Texture2D> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "Height Map", scene);
             textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
             // return a mesh object created from the extracted mesh data
@@ -170,10 +164,7 @@ namespace soft {
 
         // checks all material textures of a given type and loads the textures
         // if they're not loaded yet. the required info is returned as a Texture struct.
-        std::vector<Texture2D> LoadMaterialTextures(aiMaterial*    mat,
-                                                    aiTextureType  type,
-                                                    std::string    typeName,
-                                                    const aiScene* scene)
+        std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName, const aiScene* scene)
         {
             std::vector<Texture2D> textures;
             for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
@@ -188,7 +179,7 @@ namespace soft {
                 else {
                     // To prevent temporary object been constructed
                     // use emplace_back here instead of push_back(Texture(str.C_Str())))
-                    auto textureFilename = m_Directory + "\\" + std::string(str.C_Str());
+                    auto textureFilename = m_Directory + "/" + std::string(str.C_Str());
                     texture.LoadTextureData(textureFilename);
                 }
                 textures.push_back(texture);

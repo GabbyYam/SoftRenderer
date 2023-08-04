@@ -83,16 +83,6 @@ build CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj: CXX
   TARGET_COMPILE_PDB = CMakeFiles\Renderer.dir\Renderer.pdb
   TARGET_PDB = Renderer.pdb
 
-build CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RTCTracer.cpp.obj: CXX_COMPILER__Renderer_Release ../Renderer/src/RayTracing/RTCTracer.cpp || cmake_object_order_depends_target_Renderer
-  DEFINES = -DSPDLOG_COMPILED_LIB
-  DEP_FILE = CMakeFiles\Renderer.dir\Renderer\src\RayTracing\RTCTracer.cpp.obj.d
-  FLAGS = -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20
-  INCLUDES = -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem "C:/Program Files (x86)/spdlog/include" -isystem "C:/Program Files (x86)/glm/include" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -isystem "C:/Program Files (x86)/OpenImageDenoise/include"
-  OBJECT_DIR = CMakeFiles\Renderer.dir
-  OBJECT_FILE_DIR = CMakeFiles\Renderer.dir\Renderer\src\RayTracing
-  TARGET_COMPILE_PDB = CMakeFiles\Renderer.dir\Renderer.pdb
-  TARGET_PDB = Renderer.pdb
-
 build CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj: CXX_COMPILER__Renderer_Release ../Renderer/src/RayTracing/RayTracer.cpp || cmake_object_order_depends_target_Renderer
   DEFINES = -DSPDLOG_COMPILED_LIB
   DEP_FILE = CMakeFiles\Renderer.dir\Renderer\src\RayTracing\RayTracer.cpp.obj.d
@@ -121,7 +111,7 @@ build CMakeFiles/Renderer.dir/Renderer/src/Renderer.cpp.obj: CXX_COMPILER__Rende
 #############################################
 # Link the static library Renderer.lib
 
-build Renderer.lib: CXX_STATIC_LIBRARY_LINKER__Renderer_Release CMakeFiles/Renderer.dir/Renderer/src/Camera/Camera.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/FileDialogs.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/Geometry/Mesh.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RTCTracer.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/Renderer.cpp.obj || Walnut.lib
+build Renderer.lib: CXX_STATIC_LIBRARY_LINKER__Renderer_Release CMakeFiles/Renderer.dir/Renderer/src/Camera/Camera.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/FileDialogs.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/Geometry/Mesh.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj CMakeFiles/Renderer.dir/Renderer/src/Renderer.cpp.obj || Walnut.lib
   LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt
   OBJECT_DIR = CMakeFiles\Renderer.dir
   POST_BUILD = cd .

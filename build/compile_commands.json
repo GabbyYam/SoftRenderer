@@ -21,11 +21,6 @@
 },
 {
   "directory": "E:/Graphics/Toy/SoftRenderer/build",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/OpenImageDenoise/include\" -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\RayTracing\\RTCTracer.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\RayTracing\\RTCTracer.cpp",
-  "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/RayTracing/RTCTracer.cpp"
-},
-{
-  "directory": "E:/Graphics/Toy/SoftRenderer/build",
   "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DSPDLOG_COMPILED_LIB -I../Renderer/src -I../3rdparty/tinyobjloader -I../3rdparty/stb -I../Walnut/src -I../3rdparty/glfw/include -I../3rdparty/imgui -I../3rdparty/imgui/backends -isystem \"C:/Program Files (x86)/spdlog/include\" -isystem \"C:/Program Files (x86)/glm/include\" -isystem D:/vcpkg/installed/x64-windows/include -isystem F:/VulkanSDK/Include -isystem \"C:/Program Files (x86)/OpenImageDenoise/include\" -O3 -DNDEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -fopenmp=libomp -std=gnu++20 -o CMakeFiles\\Renderer.dir\\Renderer\\src\\RayTracing\\RayTracer.cpp.obj -c E:\\Graphics\\Toy\\SoftRenderer\\Renderer\\src\\RayTracing\\RayTracer.cpp",
   "file": "E:/Graphics/Toy/SoftRenderer/Renderer/src/RayTracing/RayTracer.cpp"
 },

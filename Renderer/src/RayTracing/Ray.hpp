@@ -16,9 +16,11 @@ namespace soft {
 
     struct Ray
     {
-        Ray(const vec3& _o, const vec3& _d) : o(_o), d(_d) {}
+        // Ray(const vec3& _o, const vec3& _d) : o(_o), d(_d) {}
         vec3 o;
         vec3 d;
+
+        bool isValid = true;
         vec3 At(float t) const
         {
             return o + t * d;

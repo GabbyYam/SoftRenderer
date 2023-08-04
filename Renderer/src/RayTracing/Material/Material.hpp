@@ -14,6 +14,7 @@
 #include <memory>
 #include <spdlog/spdlog.h>
 #include <stdint.h>
+#include <vector>
 
 namespace soft {
 
@@ -48,14 +49,14 @@ namespace soft {
         //                glm::reflect(ray.d, payload.rtcHit.normal + Walnut::Random::Vec3(-0.5, 0.5)));
         // }
 
-        virtual SampleRay Sample(const Ray& ray, const HitPayload& payload)
+        virtual std::vector<SampleRay> Sample(const Ray& ray, const HitPayload& payload)
         {
-            return CosineWeightedSampleHemiSphere(payload, ray);
+            return {CosineWeightedSampleHemiSphere(payload, ray)};
         }
 
-        virtual vec3 EvaluateBRDF(const HitPayload& payload, const vec3& wi, const vec3& wo)
+        virtual std::vector<vec3> EvaluateBRDF(const HitPayload& payload, const vec3& wi, const vec3& wo)
         {
-            return m_Albedo / (2.0f * PI);
+            return {m_Albedo / (PI)};
         }
 
         mat3 TBN(const vec3& N)
@@ -100,10 +101,8 @@ namespace soft {
         SampleRay CosineWeightedSampleHemiSphere(HitPayload const& payload, Ray const& ray)
         {
             // vec3 N = normalize(vec3(payload.rtcHit.hit.Ng_x, payload.rtcHit.hit.Ng_y, payload.rtcHit.hit.Ng_z));
-            vec3 N = payload.normal;
-
-            // vec2 Xi = Hammersley(Walnut::Random::Float() * s_SampleCount, s_SampleCount);
-            vec2 Xi = vec2(Walnut::Random::Float(), Walnut::Random::Float());
+            vec3 N  = payload.normal;
+            vec2 Xi = Hammersley(Walnut::Random::Float() * s_SampleCount, s_SampleCount);
 
             float r     = sqrt(Xi.x);
             float theta = 2.0f * PI * Xi.y;
@@ -113,7 +112,7 @@ namespace soft {
 
             vec3  p     = ray.At(payload.rtcHit.ray.tfar) + N * bias;
             float NdotL = max(0.0f, dot(N, sampleVec));
-            float pdf   = NdotL / (2.0f * PI);
+            float pdf   = NdotL / (PI);
 
             return SampleRay{.ray = {p, sampleVec}, .pdf = pdf};
         }
@@ -140,7 +139,7 @@ namespace soft {
             vec3  p     = ray.At(payload.rtcHit.ray.tfar) + N * bias;
             float NdotL = max(0.0f, dot(N, sampleVec));
             float NdotV = max(0.0f, dot(N, V));
-            float pdf   = NdotL / (2.0f * PI);
+            float pdf   = NdotL / (PI);
 
             return SampleRay{.ray = {p, sampleVec}, .pdf = pdf};
         }
@@ -168,16 +167,17 @@ namespace soft {
         {
         }
 
-        virtual SampleRay Sample(const Ray& ray, const HitPayload& payload) override
+        virtual std::vector<SampleRay> Sample(const Ray& ray, const HitPayload& payload) override
         {
-            // return ImportanceSampleGGX(payload, ray);
-            return CosineWeightedSampleHemiSphere(payload, ray);
-            // return UniformSampleHemiSphere(payload, ray);
+            float r           = Walnut::Random::Float();
+            auto  diffuseRay  = CosineWeightedSampleHemiSphere(payload, ray);
+            auto  specularRay = ImportanceSampleGGX(payload, ray);
+
+            return {diffuseRay, specularRay};
         }
 
-        virtual vec3 EvaluateBRDF(const HitPayload& payload, const vec3& wi, const vec3& wo) override
+        virtual std::vector<vec3> EvaluateBRDF(const HitPayload& payload, const vec3& wi, const vec3& wo) override
         {
-            // vec3  N     = normalize(vec3(payload.rtcHit.hit.Ng_x, payload.rtcHit.hit.Ng_y, payload.rtcHit.hit.Ng_z));
             vec3  N     = payload.normal;
             vec3  L     = normalize(wi);
             vec3  V     = normalize(wo);
@@ -200,14 +200,13 @@ namespace soft {
             kD *= 1.0 - m_Metallic;
 
             vec3  nominator   = NDF * G * F;
-            float denominator = 4.0 * NdotV * NdotL + 0.001f;
+            float denominator = 4.0 * NdotV * NdotL + 0.0001f;
 
             vec3 specular = nominator / denominator;
 
             vec3 lambertian = m_Albedo / PI;
 
-            vec3 brdf = kD * lambertian + specular;
-            return brdf;
+            return {kD * lambertian, specular};
         }
 
         float DistributionGGX(vec3 N, vec3 H, float roughness)
@@ -245,9 +244,9 @@ namespace soft {
             return ggx1 * ggx2;
         }
 
-        vec3 FresnelSchlick(float cosTheta, vec3 F0)
+        vec3 FresnelSchlick(float VdotH, vec3 F0)
         {
-            return F0 + (1.0f - F0) * pow(clamp(1.0f - cosTheta, 0.0f, 1.0f), 5.0f);
+            return F0 + (1.0f - F0) * pow(clamp(1.0f - VdotH, 0.0f, 1.0f), 5.0f);
         }
 
         vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
@@ -262,8 +261,6 @@ namespace soft {
 
             vec3 p = ray.At(payload.rtcHit.ray.tfar) + N * bias;
 
-            Xi = vec2(Walnut::Random::Float(), Walnut::Random::Float());
-
             float a     = m_Roughness * m_Roughness;
             float a2    = a * a;
             float theta = std::acos(std::sqrt((1.0f - Xi.x) / (1.0f + (a2 - 1.0f) * Xi.x)));
@@ -277,21 +274,16 @@ namespace soft {
             // To World-space
             H = normalize(TBN(N) * H);
 
-            float nominator   = 2.0f * a2 * cos(theta) * sin(theta);
-            float denominator = (a2 - 1) * cos(theta) * cos(theta) + 1.0f;
-            denominator       = denominator * denominator;
-
             vec3 V = normalize(-ray.d);
             vec3 L = normalize(reflect(ray.d, H));
 
             float NdotL = max(L.z, 0.0f);
-            float NdotH = max(H.z, 0.0f);
-            float VdotH = dot(V, H);
+            float NdotH = max(dot(N, H), 0.0f);
+            float VdotH = max(dot(V, H), 0.0f);
             float NdotV = max(dot(N, V), 0.0f);
 
-            float pdf = (nominator / denominator) / (4.0f * VdotH);
-
-            return SampleRay{.ray = {p, L}, .pdf = pdf};
+            float pdf = (DistributionGGX(N, H, m_Roughness) * NdotH) / (4.0f * VdotH);
+            return SampleRay{.ray = Ray{p, L}, .pdf = pdf};
         }
 
     public:
