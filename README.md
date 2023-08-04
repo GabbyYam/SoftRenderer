@@ -42,6 +42,6 @@
 
 ## Gallery
 
-![2023-06-10 23'33'16](Assets/cornellbox_white.png)
+![2023-06-10 23'33'16](Assets/CornellBox_white.png)
 
-![2023-06-10 23'33'16](Assets/smooth.png)
+![2023-06-10 23'33'16](Assets/Smooth.png)
