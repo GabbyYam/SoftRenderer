@@ -1,7 +1,7 @@
 # ninja log v5
 41	3161	7112563141983695	CMakeFiles/Walnut.dir/Walnut/src/Walnut/Application.cpp.obj	3c0268de1df6de8d
 29	83	7109440657819693	CMakeFiles/Renderer.dir/Renderer/src/Geometry/Mesh.cpp.obj	ba2122e5cae00710
-5886	6038	7119040425894041	Renderer.lib	5b2c1349f049fde3
+3571	3729	7137018654875406	Renderer.lib	5b2c1349f049fde3
 14	5885	7119040424216749	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj	63a360ec16210f38
 60	200	7109440658998059	CMakeFiles/Editor.dir/Editor/resources/editor.rc.res	9c328a52fc88dad0
 82	1766	7081404347390294	CMakeFiles/imgui.dir/3rdparty/imgui/backends/imgui_impl_glfw.cpp.obj	ad2aaf35d2fc8153
@@ -41,9 +41,9 @@
 75	5172	7081404381853229	CMakeFiles/imgui.dir/3rdparty/imgui/imgui_widgets.cpp.obj	259775e1bf39752b
 98	6319	7115321845302815	CMakeFiles/Editor.dir/Editor/src/Editor.cpp.obj	5bc7d700a7303ced
 40	5300	7109527861509778	CMakeFiles/Walnut.dir/Walnut/src/Walnut/Image.cpp.obj	b89bbc3bfdbdbd0c
-68	3760	7115321819719969	CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj	537bf9af4e3dce26
+30	3570	7137018653186554	CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj	537bf9af4e3dce26
 61	11881	7081404448927003	CMakeFiles/imgui.dir/3rdparty/imgui/imgui_draw.cpp.obj	fcc4ba761c1f850e
 37	4162	7114341704282526	CMakeFiles/Renderer.dir/Renderer/src/Renderer.cpp.obj	387b96f77e2e705e
-6038	8106	7119040427484105	Editor.exe	6786aecdfb3e01a6
+3729	4592	7137018656923013	Editor.exe	6786aecdfb3e01a6
 24	5660	7114367244278111	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RTCTracer.cpp.obj	1ccef7fc49490b8e
 20	1588	7109440672824726	CMakeFiles/Renderer.dir/Renderer/src/FileDialogs.cpp.obj	db52bbc2fbba989c

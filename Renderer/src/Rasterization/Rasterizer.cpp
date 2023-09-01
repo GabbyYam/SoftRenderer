@@ -84,10 +84,12 @@ namespace soft {
                         std::array<Vertex, 3>{vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]};
 
                     // Cull back
-                    vec4 normal =
-                        -vec4(glm::cross(primitive[0].position - primitive[2].position, primitive[0].position - primitive[1].position),
-                              1.0f);
-                    vec4 viewDir = vec4(primitive[0].position - camera->GetPosition(), 1.0f);
+                    auto& p0 = primitive[0].position;
+                    auto& p1 = primitive[1].position;
+                    auto& p2 = primitive[2].position;
+
+                    vec4 normal  = -vec4(glm::cross(p0 - p2, p0 - p1), 1.0f);
+                    vec4 viewDir = vec4(p0 - camera->GetPosition(), 1.0f);
 
                     if (CullBack(normal, viewDir))
                         continue;
@@ -100,12 +102,14 @@ namespace soft {
                         float bias     = 0.1f;
                         float minBound = -v.w - bias, maxBound = v.w + bias;
 
+                        // Clip Spcace
                         if (v.x <= minBound || v.x >= maxBound || v.y <= minBound || v.y >= maxBound || v.z <= minBound ||
                             v.z >= maxBound) {
                             frustumCull = true;
                             break;
                         }
 
+                        // NDC
                         v /= v.w;
 
                         v.x = (1.0f + v.x) * m_Width * 0.5f;
@@ -153,21 +157,19 @@ namespace soft {
 
     glm::vec3 Rasterizer::Barycentric(const Primitive& primitive, const point2 p)
     {
-        vec3 v1(primitive[1].position.x - primitive[0].position.x, primitive[2].position.x - primitive[0].position.x,
-                primitive[0].position.x - p.x);
-        vec3 v2(primitive[1].position.y - primitive[0].position.y, primitive[2].position.y - primitive[0].position.y,
-                primitive[0].position.y - p.y);
+        auto& p0 = primitive[0].position;
+        auto& p1 = primitive[1].position;
+        auto& p2 = primitive[2].position;
+
+        vec3 vx{p1.x, p2.x, p0.x};
+        vec3 vy{p1.x, p2.x, p0.x};
+
+        vec3 v1(p1.x - p0.x, p2.x - p0.x, p0.x - p.x);
+        vec3 v2(p1.y - p0.y, p2.y - p0.y, p0.y - p.y);
 
         auto u = cross(v1, v2);
 
-        // High precision case
-        // auto u =
-        //     vec3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
-
-        // if (std::abs(u.z) < 1.0f)
-        //     return glm::vec3(-1, 1, 1);
-
-        return glm::vec3(1.f - ((u.x + u.y) / (float)u.z), u.x / (float)u.z, u.y / (float)u.z);
+        return glm::vec3(1.f - ((u.x + u.y) / u.z), u.x / u.z, u.y / u.z);
     }
 
     void Rasterizer::Line(const point2& p1, const point2& p2, const color& c)
