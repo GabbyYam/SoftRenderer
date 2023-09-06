@@ -341,11 +341,15 @@ namespace soft {
 
         // Intersect with scene
         if (payload.rtcHit.hit.geomID == RTC_INVALID_GEOMETRY_ID) {
-            if (lightSetting.useEnvironmentMap) {
-                vec3 E  = m_EnvironmentMap ? m_EnvironmentMap->SampleCube(ray.d) : vec3{0.6, 0.7, 0.9};
-                vec3 Li = E * lightSetting.lightIntensity;
-                Lo += Li;
+            vec3 E;
+            if (lightSetting.useEnvironmentMap && m_EnvironmentMap) {
+                E = m_EnvironmentMap->SampleCube(ray.d);
             }
+            else {
+                E = vec3{0.6, 0.7, 0.9};
+            }
+            vec3 Li = E * lightSetting.lightIntensity;
+            Lo += Li;
             return Lo;
         }
 
@@ -498,7 +502,7 @@ namespace soft {
         floor.SetTransform(scale(mat4(1.00f), vec3(16.0f, 1.0f, 16.0f)));
         wallA.SetTransform(rotate(mat4(1.00f), radians(-45.0f), vec3(0, 1, 0)));
         wallB.SetTransform(rotate(mat4(1.00f), radians(-45.0f), vec3(0, 1, 0)));
-        AddQuad(floor, 0);
+        // AddQuad(floor, 0);
         // AddQuad(wallA, 1);
         // AddQuad(wallB, 2);
         vec3 red(1, 0, 0), green(0, 1, 0), white(1.0f);

@@ -47,3 +47,13 @@
 3729	4592	7137018656923013	Editor.exe	6786aecdfb3e01a6
 24	5660	7114367244278111	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RTCTracer.cpp.obj	1ccef7fc49490b8e
 20	1588	7109440672824726	CMakeFiles/Renderer.dir/Renderer/src/FileDialogs.cpp.obj	db52bbc2fbba989c
+13	5983	7157179904969636	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj	63a360ec16210f38
+5984	6150	7157179906777392	Renderer.lib	5b2c1349f049fde3
+6150	6916	7157179908566880	Editor.exe	6786aecdfb3e01a6
+11	5723	7157182225092948	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj	63a360ec16210f38
+5723	5857	7157182226586289	Renderer.lib	5b2c1349f049fde3
+5857	6549	7157182227856276	Editor.exe	6786aecdfb3e01a6
+22	3235	7157183813888775	CMakeFiles/Renderer.dir/Renderer/src/Rasterization/Rasterizer.cpp.obj	537bf9af4e3dce26
+27	5866	7157183840136409	CMakeFiles/Renderer.dir/Renderer/src/RayTracing/RayTracer.cpp.obj	63a360ec16210f38
+5866	5986	7157183841495861	Renderer.lib	5b2c1349f049fde3
+5986	6657	7157183842715708	Editor.exe	6786aecdfb3e01a6

@@ -47,3 +47,5 @@
 ![2023-06-10 23'33'16](Assets/CornellBox_white.png)
 
 ![2023-06-10 23'33'16](Assets/Smooth.png)
+
+![2023-06-10 23'33'16](Assets/Monkey_denoised_1.png)

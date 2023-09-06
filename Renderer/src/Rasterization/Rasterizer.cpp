@@ -56,7 +56,7 @@ namespace soft {
             std::for_each(std::execution::par, begin(m_HorizontalIter), end(m_HorizontalIter), [&](uint32_t x) {
                 if (lightSetting.useEnvironmentMap) {
                     vec3 dir = camera->GetRayDirection(x, y);
-                    SetPixelColor(x, y, m_EnvironmentMap->SampleCube(dir) * 100.0f);
+                    SetPixelColor(x, y, m_EnvironmentMap->SampleCube(dir));
                 }
                 else {
                     SetPixelColor(x, y, skyColor);
@@ -267,8 +267,8 @@ namespace soft {
                 }
 
                 // NoL           = max(.15f, 1.0f - glm::step(NoL, .3f));
-                float ambient = 0.15;
-                float diffuse = glm::step(NoL, 0.3f);
+                float ambient = 0.04;
+                float diffuse = max(0.0f, NoL);
 
                 vec3 color = (diffuse + ambient) * albedo;
 
